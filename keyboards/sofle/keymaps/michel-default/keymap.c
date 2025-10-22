@@ -21,7 +21,6 @@ enum sofle_layers {
     _BASE,
     _NUM,
     _SYM,
-    _FUN,
     _NAV,
     _MOU,
     _FUN,
@@ -64,7 +63,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______,   KC_Q,   KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y, KC_QUOT,  _______,
       _______,   KC_A,   KC_R,    KC_S,    KC_T,    KC_D,                      KC_H,    KC_N,    KC_E,    KC_I,    KC_O,  _______,
       _______,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_MUTE,      XXXXXXX,KC_K,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  _______,
-                     _______, _______, KC_TAB, ESC_MOU, SPC_NAV,        ENT_NUM,  BCSP_SYM, KC_DEL, _______,_______
+                     _______, _______, TAB_MED, ESC_MOU, SPC_NAV,        ENT_NUM,  BCSP_SYM, DEL_FUN, _______,_______
     ),
     [_NAV] = LAYOUT(
       _______, LSFT(KC_F2), LSFT(KC_F3), LSFT(KC_F4), _______, _______,                   _______, _______, _______, _______, _______, _______,
@@ -75,9 +74,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_SYM] = LAYOUT(
       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
-      _______, KC_LBRC, KC_AMPR, KC_ASTR, KC_EQUAL, KC_RBRC,                   _______, _______, _______, _______, _______, _______,
+      _______, KC_LBRC, KC_AMPR, KC_ASTR, KC_GRV, KC_RBRC,                   _______, _______, _______, _______, _______, _______,
       _______, KC_SCLN, KC_DLR, KC_PERC, KC_CIRC, KC_PLUS,                   KC_BSPC, KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI, _______,
-      _______, KC_GRV,  KC_EXLM, KC_AT, KC_HASH, KC_PIPE, _______, _______, _______, _______, _______, _______, _______,  _______,
+      _______, KC_EQUAL,  KC_EXLM, KC_AT, KC_HASH, KC_PIPE, _______, _______, _______, _______, _______, _______, _______,  _______,
                          _______, _______, KC_LPRN, KC_RPRN, KC_MINUS, _______, _______, _______, _______, _______
     ),
     [_NUM] = LAYOUT(
@@ -103,7 +102,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_MED] = LAYOUT(
       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
-      _______, _______, _______, _______, _______, _______,                   KC_REDO, KC_PASTE, KC_COPY, KC_CUT, KC_UNDO, _______,
+      _______, _______, _______, _______, _______, _______,                   KC_FIND, KC_PASTE, KC_COPY, KC_CUT, KC_UNDO, _______,
       _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_BSPC,                   _______, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT, _______,
       _______, _______, _______, _______, _______, _______, _______, _______, _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR, _______,
                          _______, _______, _______, _______, _______, KC_MSTP, KC_MPLY, KC_MUTE, _______, _______
