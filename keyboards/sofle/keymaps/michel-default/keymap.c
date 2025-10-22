@@ -6,8 +6,10 @@
 #define ENT_NUM  LT(_NUM, KC_ENT)
 #define BCSP_SYM LT(_SYM, KC_BSPC)
 #define ESC_MOU LT(_MOU, KC_ESC)
-#define ESC_GUI  MT(MOD_LGUI, KC_ESC)
-#define SCLN_GUI MT(MOD_RGUI, KC_SCLN)
+#define TAB_MED LT(_MED, KC_TAB)
+#define DEL_FUN LT(_FUN, KC_DEL)
+/*#define ESC_GUI  MT(MOD_LGUI, KC_ESC)*/
+/*#define SCLN_GUI MT(MOD_RGUI, KC_SCLN)*/
 
 // #define BCSP_SHFT  MT(MOD_RSFT, KC_BSPC)
 // #define CBCSP_SHFT  MT(MOD_RSFT, LCTL(KC_BSPC))
@@ -22,6 +24,8 @@ enum sofle_layers {
     _FUN,
     _NAV,
     _MOU,
+    _FUN,
+    _MED
 };
 
 // enum custom_keycodes {
@@ -63,9 +67,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                      _______, _______, KC_TAB, ESC_MOU, SPC_NAV,        ENT_NUM,  BCSP_SYM, KC_DEL, _______,_______
     ),
     [_NAV] = LAYOUT(
-      _______, LSFT(KC_F2), LSFT(KC_F3), LSFT(KC_F4), _______, _______,                   KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12,
-      _______, LSFT(KC_F5), KC_F5, KC_F9, KC_F10, KC_F11,                   KC_PSCR, KC_CAPS, _______, _______, _______, _______,
-      _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_BSPC,                   _______, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, _______,
+      _______, LSFT(KC_F2), LSFT(KC_F3), LSFT(KC_F4), _______, _______,                   _______, _______, _______, _______, _______, _______,
+      _______, LSFT(KC_F5), KC_F5, KC_F9, KC_F10, KC_F11,                   KC_PSCR, _______, _______, _______, _______, _______,
+      _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_BSPC,                   KC_CAPS, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, _______,
       _______, _______, _______, LCTL(KC_F7), KC_F12, LCTL(KC_F12), _______, _______, _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END, _______,
                          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
@@ -77,7 +81,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                          _______, _______, KC_LPRN, KC_RPRN, KC_MINUS, _______, _______, _______, _______, _______
     ),
     [_NUM] = LAYOUT(
-      KC_F1, KC_F2, KC_F3, KC_F4,  KC_F5, KC_F6,                   _______, _______, _______, _______, _______, _______,
+      _______, _______, _______, _______,  _______, _______,                   _______, _______, _______, _______, _______, _______,
       _______, KC_SLSH, KC_7, KC_8, KC_9, KC_PLUS,                   _______, _______, _______, _______, _______, _______,
       _______, KC_ASTR, KC_4, KC_5, KC_6, KC_MINS,                   KC_BSPC, KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI, _______,
       _______, KC_DOT,  KC_1, KC_2, KC_3, KC_EQUAL, _______, _______, _______, _______, _______, _______, _______,  _______,
@@ -89,6 +93,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_BSPC,                   _______, MS_LEFT, MS_DOWN, MS_UP, MS_RGHT, _______,
       _______, _______, _______, _______, _______, _______, _______, _______, _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR, _______,
                          _______, _______, _______, _______, _______, MS_BTN1, MS_BTN2, MS_BTN3, _______, _______
+    ),
+    [_FUN] = LAYOUT(
+      _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
+      _______, KC_F12, KC_F7, KC_F8, KC_F9, _______,                   _______, _______, _______, _______, _______, _______,
+      _______, KC_F11, KC_F4, KC_F5, KC_F6, _______,                   KC_BSPC, KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI, _______,
+      _______, KC_F10, KC_F1, KC_F2, KC_F3, _______, _______, _______, _______, _______, _______, _______, _______,  _______,
+                         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+    ),
+    [_MED] = LAYOUT(
+      _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
+      _______, _______, _______, _______, _______, _______,                   KC_REDO, KC_PASTE, KC_COPY, KC_CUT, KC_UNDO, _______,
+      _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_BSPC,                   _______, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT, _______,
+      _______, _______, _______, _______, _______, _______, _______, _______, _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR, _______,
+                         _______, _______, _______, _______, _______, KC_MSTP, KC_MPLY, KC_MUTE, _______, _______
     ),
 };
 
