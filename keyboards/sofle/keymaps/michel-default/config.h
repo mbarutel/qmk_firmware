@@ -15,5 +15,5 @@
 // #define EE_HANDS
 
 // Optional: combo config
-#define COMBO_COUNT 2
-#define COMBO_TERM 30
+// #define COMBO_COUNT 2
+// #define COMBO_TERM 30
