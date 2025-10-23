@@ -1,6 +1,7 @@
 // Copyright 2023 QMK
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include QMK_KEYBOARD_H
+#include "quantum.h"
 
 #define SPC_NAV  LT(_NAV, KC_SPC)
 #define ENT_NUM  LT(_NUM, KC_ENT)
@@ -8,6 +9,16 @@
 #define ESC_MOU LT(_MOU, KC_ESC)
 #define TAB_MED LT(_MED, KC_TAB)
 #define DEL_FUN LT(_FUN, KC_DEL)
+
+#define HM_A LGUI_T(KC_A)
+#define HM_R LALT_T(KC_R)
+#define HM_S LCTL_T(KC_S)
+#define HM_T LSFT_T(KC_T)
+
+#define HM_O RGUI_T(KC_O)
+#define HM_I RALT_T(KC_I)
+#define HM_E RCTL_T(KC_E)
+#define HM_N RSFT_T(KC_N)
 /*#define ESC_GUI  MT(MOD_LGUI, KC_ESC)*/
 /*#define SCLN_GUI MT(MOD_RGUI, KC_SCLN)*/
 
@@ -61,7 +72,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT(
       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
       _______,   KC_Q,   KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y, KC_QUOT,  _______,
-      _______,   KC_A,   KC_R,    KC_S,    KC_T,    KC_D,                      KC_H,    KC_N,    KC_E,    KC_I,    KC_O,  _______,
+      _______,   HM_A,   HM_R,    HM_S,    HM_T,    KC_D,                      KC_H,    HM_N,    HM_E,    HM_I,    HM_O,  _______,
       _______,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_MUTE,      XXXXXXX,KC_K,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  _______,
                      _______, _______, TAB_MED, ESC_MOU, SPC_NAV,        ENT_NUM,  BCSP_SYM, DEL_FUN, _______,_______
     ),
@@ -108,6 +119,135 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                          _______, _______, _______, _______, _______, KC_MSTP, KC_MPLY, KC_MUTE, _______, _______
     ),
 };
+
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case HM_A: return 200;   // Pinky
+    case HM_R: return 190;   // Ring
+    case HM_S: return 180;   // Middle
+    case HM_T: return 170;   // Index
+    case HM_N: return 170;
+    case HM_E: return 180;
+    case HM_I: return 190;
+    case HM_O: return 200;
+  }
+  return TAPPING_TERM;
+}
+
+bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case HM_A: case HM_R: case HM_S: case HM_T:
+    case HM_N: case HM_E: case HM_I: case HM_O:
+      return true;  // Only for HRMs (keeps other Mod-Taps normal)
+  }
+  return false;
+}
+
+bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case HM_A: case HM_R: case HM_S: case HM_T:
+    case HM_N: case HM_E: case HM_I: case HM_O:
+      return true;
+  }
+  return false;
+}
+
+// If you like quick re-taps to *always* be taps on HRMs:
+uint16_t get_quick_tap_term(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case HM_A: case HM_R: case HM_S: case HM_T:
+    case HM_N: case HM_E: case HM_I: case HM_O:
+      return 150; // per-key quick-tap window
+  }
+  return QUICK_TAP_TERM;
+}
+
+// --- Define which keys count as home-row mods on each side (their TAP keys) ---
+static bool is_left_hrm_tap(uint16_t tapkc) {
+    switch (tapkc) {
+        case KC_A: case KC_S: case KC_D: case KC_F: return true; // adjust to taste
+    }
+    return false;
+}
+static bool is_right_hrm_tap(uint16_t tapkc) {
+    switch (tapkc) {
+        case KC_J: case KC_K: case KC_L: case KC_SCLN: return true; // adjust to taste
+    }
+    return false;
+}
+
+// Track if any HRM is currently held down on each side.
+// We count *presses*; releases decrement.
+static uint8_t left_hrm_down = 0;
+static uint8_t right_hrm_down = 0;
+
+// Track presses we "converted to taps" so we can swallow their releases.
+static bool suppress_left[4]  = {false,false,false,false};
+static bool suppress_right[4] = {false,false,false,false};
+
+static int idx_of_left(uint16_t tapkc) { // 0..3 for A,S,D,F
+    switch (tapkc) { case KC_A: return 0; case KC_R: return 1; case KC_S: return 2; case KC_T: return 3; }
+    return -1;
+}
+static int idx_of_right(uint16_t tapkc) { // 0..3 for J,K,L,;
+    switch (tapkc) { case KC_N: return 0; case KC_E: return 1; case KC_I: return 2; case KC_O: return 3; }
+    return -1;
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    // Only care about Mod-Taps
+    if (IS_MOD_TAP(keycode)) {
+        uint16_t tapkc = GET_MOD_TAP_KC(keycode);
+
+        // LEFT HRM bookkeeping
+        if (is_left_hrm_tap(tapkc)) {
+            int idx = idx_of_left(tapkc);
+
+            // If the right side is currently down, force this press to a TAP and swallow it
+            if (record->event.pressed) {
+                if (right_hrm_down > 0) {
+                    tap_code16(tapkc);           // send the letter
+                    if (idx >= 0) suppress_left[idx] = true; // ignore the upcoming release
+                    return false;                // don't let QMK handle as Mod-Tap
+                }
+                left_hrm_down++;
+                return true;                     // let QMK decide tap vs hold as normal
+            } else {
+                if (idx >= 0 && suppress_left[idx]) {
+                    suppress_left[idx] = false;  // swallow the release we synthesized
+                    return false;
+                }
+                if (left_hrm_down > 0) left_hrm_down--;
+                return true;
+            }
+        }
+
+        // RIGHT HRM bookkeeping
+        if (is_right_hrm_tap(tapkc)) {
+            int idx = idx_of_right(tapkc);
+
+            if (record->event.pressed) {
+                if (left_hrm_down > 0) {
+                    tap_code16(tapkc);
+                    if (idx >= 0) suppress_right[idx] = true;
+                    return false;
+                }
+                right_hrm_down++;
+                return true;
+            } else {
+                if (idx >= 0 && suppress_right[idx]) {
+                    suppress_right[idx] = false;
+                    return false;
+                }
+                if (right_hrm_down > 0) right_hrm_down--;
+                return true;
+            }
+        }
+    }
+
+    return true; // everything else normal
+}
+
 
 // combo_t key_combos[] = {
 //     COMBO(left_ctrl, KC_LCTL),
