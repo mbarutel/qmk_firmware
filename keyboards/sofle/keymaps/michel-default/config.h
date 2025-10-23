@@ -3,7 +3,7 @@
 
 #pragma once
 
-#define TAPPING_TERM 170
+#define TAPPING_TERM 155
 // #define TAPPING_TERM_PER_KEY
 #define QUICK_TAP_TERM 0
 #define PERMISSIVE_HOLD
