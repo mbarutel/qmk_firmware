@@ -1,15 +1,28 @@
 // Copyright 2023 QMK
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include QMK_KEYBOARD_H
+#include "quantum.h"
 
 #define SPC_NAV  LT(_NAV, KC_SPC)
 #define ENT_NUM  LT(_NUM, KC_ENT)
-// #define BCSP_SYM  LT(_SYM, KC_BSPC)
+#define BCSP_SYM LT(_SYM, KC_BSPC)
+#define ESC_MOU LT(_MOU, KC_ESC)
+#define TAB_MED LT(_MED, KC_TAB)
+#define DEL_FUN LT(_FUN, KC_DEL)
 
-#define ESC_GUI  MT(MOD_LGUI, KC_ESC)
-#define SCLN_GUI MT(MOD_RGUI, KC_SCLN)
+#define HM_A LGUI_T(KC_A)
+#define HM_R LALT_T(KC_R)
+#define HM_S LCTL_T(KC_S)
+#define HM_T LSFT_T(KC_T)
 
-#define BCSP_SHFT  MT(MOD_RSFT, KC_BSPC)
+#define HM_O RGUI_T(KC_O)
+#define HM_I RALT_T(KC_I)
+#define HM_E RCTL_T(KC_E)
+#define HM_N RSFT_T(KC_N)
+/*#define ESC_GUI  MT(MOD_LGUI, KC_ESC)*/
+/*#define SCLN_GUI MT(MOD_RGUI, KC_SCLN)*/
+
+// #define BCSP_SHFT  MT(MOD_RSFT, KC_BSPC)
 // #define CBCSP_SHFT  MT(MOD_RSFT, LCTL(KC_BSPC))
 
 // #define EQUAL_SHFT  MT(MOD_LSFT, KC_EQUAL)
@@ -19,65 +32,66 @@ enum sofle_layers {
     _BASE,
     _NUM,
     _SYM,
-    _FUN,
     _NAV,
     _MOU,
+    _FUN,
+    _MED
 };
 
-enum custom_keycodes {
+// enum custom_keycodes {
     // TMUX_SHFT = SAFE_RANGE,
     // QUOTE_GRV,
     // MOU_BSPC,
-    SHFT_BSPC = SAFE_RANGE
-};
+    // SHFT_BSPC = SAFE_RANGE
+// };
 
-typedef struct {
-    bool     down;
-    bool     hold;
-    uint16_t timer;
-} dual_state_t;
+// typedef struct {
+//     bool     down;
+//     bool     hold;
+//     uint16_t timer;
+// } dual_state_t;
 
 // typedef struct {
 //     bool     down;
 //     uint16_t timer;
 // } single_state_t;
 
-static dual_state_t shft = {0};
+// static dual_state_t shft = {0};
 // static dual_state_t tmux = {0};
 // static dual_state_t mb = {0};
 // static single_state_t qg = {0};
 
-const uint16_t PROGMEM left_ctrl[] = {KC_S, KC_T, COMBO_END};
-const uint16_t PROGMEM left_alt[] = {KC_T, KC_D, COMBO_END};
+// const uint16_t PROGMEM left_ctrl[] = {KC_S, KC_T, COMBO_END};
+// const uint16_t PROGMEM left_alt[] = {KC_T, KC_D, COMBO_END};
 // const uint16_t PROGMEM left_sft[] = {KC_M, KC_E, COMBO_END};
-const uint16_t PROGMEM right_ctrl[] = {KC_N, KC_E, COMBO_END};
-const uint16_t PROGMEM right_alt[] = {KC_N, KC_H, COMBO_END};
+// const uint16_t PROGMEM right_ctrl[] = {KC_N, KC_E, COMBO_END};
+// const uint16_t PROGMEM right_alt[] = {KC_N, KC_H, COMBO_END};
 // const uint16_t PROGMEM right_sft[] = {KC_V, KC_S, COMBO_END};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT(
-      KC_CAPS,   KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                      KC_6,    KC_7,    KC_8,    KC_9,    KC_0,  KC_DEL,
-      KC_TAB,   KC_Q,   KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y, KC_QUOT,  KC_BSLS,
-      ESC_GUI,   KC_A,   KC_R,    KC_S,    KC_T,    KC_D,                      KC_H,    KC_N,    KC_E,    KC_I,    KC_O,  SCLN_GUI,
-      LCTL(KC_B),  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_MUTE,      XXXXXXX,KC_K,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  KC_EQUAL,
-                     KC_LCTL, KC_LALT, MO(_MOU), SHFT_BSPC, SPC_NAV,        ENT_NUM,  BCSP_SHFT, MO(_SYM), KC_RALT, KC_RCTL
+      _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
+      _______,   KC_Q,   KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y, KC_QUOT,  _______,
+      _______,   HM_A,   HM_R,    HM_S,    HM_T,    KC_D,                      KC_H,    HM_N,    HM_E,    HM_I,    HM_O,  _______,
+      _______,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_MUTE,      XXXXXXX,KC_K,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  _______,
+                     _______, _______, TAB_MED, ESC_MOU, SPC_NAV,        ENT_NUM,  BCSP_SYM, DEL_FUN, _______,_______
     ),
     [_NAV] = LAYOUT(
-      _______, LSFT(KC_F2), LSFT(KC_F3), LSFT(KC_F4), _______, _______,                   KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12,
+      _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
       _______, LSFT(KC_F5), KC_F5, KC_F9, KC_F10, KC_F11,                   KC_PSCR, _______, _______, _______, _______, _______,
-      _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_BSPC,                   _______, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, _______,
+      _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_BSPC,                   KC_CAPS, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, _______,
       _______, _______, _______, LCTL(KC_F7), KC_F12, LCTL(KC_F12), _______, _______, _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END, _______,
                          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
     [_SYM] = LAYOUT(
       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
       _______, KC_LBRC, KC_AMPR, KC_ASTR, KC_GRV, KC_RBRC,                   _______, _______, _______, _______, _______, _______,
-      _______, KC_LCBR, KC_DLR, KC_PERC, KC_CIRC, KC_RCBR,                   KC_BSPC, KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI, _______,
-      _______, KC_LPRN,  KC_EXLM, KC_AT, KC_HASH, KC_RPRN, _______, _______, _______, _______, _______, _______, _______,  _______,
-                         _______, _______, KC_PLUS, KC_MINS, KC_UNDS, _______, _______, _______, _______, _______
+      _______, KC_SCLN, KC_DLR, KC_PERC, KC_CIRC, KC_PLUS,                   KC_BSPC, KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI, _______,
+      _______, KC_EQUAL,  KC_EXLM, KC_AT, KC_HASH, KC_PIPE, _______, _______, _______, _______, _______, _______, _______,  _______,
+                         _______, _______, KC_LPRN, KC_RPRN, KC_MINUS, _______, _______, _______, _______, _______
     ),
     [_NUM] = LAYOUT(
-      KC_F1, KC_F2, KC_F3, KC_F4,  KC_F5, KC_F6,                   _______, _______, _______, _______, _______, _______,
+      _______, _______, _______, _______,  _______, _______,                   _______, _______, _______, _______, _______, _______,
       _______, KC_SLSH, KC_7, KC_8, KC_9, KC_PLUS,                   _______, _______, _______, _______, _______, _______,
       _______, KC_ASTR, KC_4, KC_5, KC_6, KC_MINS,                   KC_BSPC, KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI, _______,
       _______, KC_DOT,  KC_1, KC_2, KC_3, KC_EQUAL, _______, _______, _______, _______, _______, _______, _______,  _______,
@@ -85,56 +99,199 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_MOU] = LAYOUT(
       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
-      _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
+      _______, _______, LSFT(KC_F2), LSFT(KC_F3), LSFT(KC_F4), _______,                   _______, _______, _______, _______, _______, _______,
       _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_BSPC,                   _______, MS_LEFT, MS_DOWN, MS_UP, MS_RGHT, _______,
       _______, _______, _______, _______, _______, _______, _______, _______, _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR, _______,
                          _______, _______, _______, _______, _______, MS_BTN1, MS_BTN2, MS_BTN3, _______, _______
     ),
+    [_FUN] = LAYOUT(
+      _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
+      _______, KC_F12, KC_F7, KC_F8, KC_F9, _______,                   _______, _______, _______, _______, _______, _______,
+      _______, KC_F11, KC_F4, KC_F5, KC_F6, _______,                   KC_BSPC, KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI, _______,
+      _______, KC_F10, KC_F1, KC_F2, KC_F3, _______, _______, _______, _______, _______, _______, _______, _______,  _______,
+                         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+    ),
+    [_MED] = LAYOUT(
+      _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
+      _______, _______, _______, _______, _______, _______,                   KC_FIND, KC_PASTE, KC_COPY, KC_CUT, KC_UNDO, _______,
+      _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_BSPC,                   _______, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT, _______,
+      _______, _______, _______, _______, _______, _______, _______, _______, _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR, _______,
+                         _______, _______, _______, _______, _______, KC_MSTP, KC_MPLY, KC_MUTE, _______, _______
+    ),
 };
 
-combo_t key_combos[] = {
-    COMBO(left_ctrl, KC_LCTL),
-    COMBO(left_alt, KC_LALT),
-    // COMBO(left_sft, KC_LSFT),
-    COMBO(right_ctrl, KC_RCTL),
-    COMBO(right_alt, KC_RALT),
-    // COMBO(right_sft, KC_RSFT),
-};
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case HM_A: return 200;   // Pinky
+    case HM_R: return 190;   // Ring
+    case HM_S: return 180;   // Middle
+    case HM_T: return 170;   // Index
+    case HM_N: return 170;
+    case HM_E: return 180;
+    case HM_I: return 190;
+    case HM_O: return 200;
+  }
+  return TAPPING_TERM;
+}
+
+bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case HM_A: case HM_R: case HM_S: case HM_T:
+    case HM_N: case HM_E: case HM_I: case HM_O:
+      return false;  // Disable for HRMs to allow bilateral combinations
+  }
+  return true;  // Enable for other Mod-Taps (layer taps, etc.)
+}
+
+bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case HM_A: case HM_R: case HM_S: case HM_T:
+    case HM_N: case HM_E: case HM_I: case HM_O:
+      return true;
+  }
+  return false;
+}
+
+// If you like quick re-taps to *always* be taps on HRMs:
+uint16_t get_quick_tap_term(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case HM_A: case HM_R: case HM_S: case HM_T:
+    case HM_N: case HM_E: case HM_I: case HM_O:
+      return 150; // per-key quick-tap window
+  }
+  return QUICK_TAP_TERM;
+}
+
+// --- Define which keys count as home-row mods on each side (their TAP keys) ---
+static bool is_left_hrm_tap(uint16_t tapkc) {
+    switch (tapkc) {
+        case KC_A: case KC_R: case KC_S: case KC_T: return true;
+    }
+    return false;
+}
+static bool is_right_hrm_tap(uint16_t tapkc) {
+    switch (tapkc) {
+        case KC_N: case KC_E: case KC_I: case KC_O: return true;
+    }
+    return false;
+}
+
+// Track if any HRM is currently held down on each side.
+// We count *presses*; releases decrement.
+static uint8_t left_hrm_down = 0;
+static uint8_t right_hrm_down = 0;
+
+// Track presses we "converted to taps" so we can swallow their releases.
+static bool suppress_left[4]  = {false,false,false,false};
+static bool suppress_right[4] = {false,false,false,false};
+
+static int idx_of_left(uint16_t tapkc) { // 0..3 for A,S,D,F
+    switch (tapkc) { case KC_A: return 0; case KC_R: return 1; case KC_S: return 2; case KC_T: return 3; }
+    return -1;
+}
+static int idx_of_right(uint16_t tapkc) { // 0..3 for J,K,L,;
+    switch (tapkc) { case KC_N: return 0; case KC_E: return 1; case KC_I: return 2; case KC_O: return 3; }
+    return -1;
+}
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case SHFT_BSPC:
-            if (record->event.pressed) {
-                shft.down  = true;
-                shft.hold  = false;
-                shft.timer = timer_read();
-            } else {
-                if (!shft.hold && timer_elapsed(shft.timer) < TAPPING_TERM) {
-                    // TAP: Ctrl+Backspace
-                    // Option A (cleaner):
-                    tap_code16(LCTL(KC_BSPC));
-                    // Option B (what you had, also fine):
-                    // register_mods(MOD_BIT(KC_LCTL));
-                    // tap_code(KC_BSPC);
-                    // unregister_mods(MOD_BIT(KC_LCTL));
-                } else {
-                    // HOLD: stop holding Shift when released
-                    if (shft.hold) {
-                        unregister_mods(MOD_BIT(KC_LSFT));  // not tap_code
-                    }
-                }
-                shft.down = false;
-            }
-            return false; // handled
+    // Only care about Mod-Taps
+    if (IS_QK_MOD_TAP(keycode)) {
+        uint16_t tapkc = QK_MOD_TAP_GET_TAP_KEYCODE(keycode);
 
-        default:
-            // Convert to HOLD the moment another key is pressed while SHFT_BSPC is down
+        // LEFT HRM bookkeeping
+        if (is_left_hrm_tap(tapkc)) {
+            int idx = idx_of_left(tapkc);
+
+            // If the right side is currently down, force this press to a TAP and swallow it
             if (record->event.pressed) {
-                if (shft.down && !shft.hold) {
-                    register_mods(MOD_BIT(KC_LSFT)); // start holding Shift
-                    shft.hold = true;
+                if (right_hrm_down > 0) {
+                    tap_code16(tapkc);           // send the letter
+                    if (idx >= 0) suppress_left[idx] = true; // ignore the upcoming release
+                    return false;                // don't let QMK handle as Mod-Tap
                 }
+                left_hrm_down++;
+                return true;                     // let QMK decide tap vs hold as normal
+            } else {
+                if (idx >= 0 && suppress_left[idx]) {
+                    suppress_left[idx] = false;  // swallow the release we synthesized
+                    return false;
+                }
+                if (left_hrm_down > 0) left_hrm_down--;
+                return true;
             }
-            return true; // let other keys process normally
+        }
+
+        // RIGHT HRM bookkeeping
+        if (is_right_hrm_tap(tapkc)) {
+            int idx = idx_of_right(tapkc);
+
+            if (record->event.pressed) {
+                if (left_hrm_down > 0) {
+                    tap_code16(tapkc);
+                    if (idx >= 0) suppress_right[idx] = true;
+                    return false;
+                }
+                right_hrm_down++;
+                return true;
+            } else {
+                if (idx >= 0 && suppress_right[idx]) {
+                    suppress_right[idx] = false;
+                    return false;
+                }
+                if (right_hrm_down > 0) right_hrm_down--;
+                return true;
+            }
+        }
     }
+
+    return true; // everything else normal
 }
+
+
+// combo_t key_combos[] = {
+//     COMBO(left_ctrl, KC_LCTL),
+//     COMBO(left_alt, KC_LALT),
+    // COMBO(left_sft, KC_LSFT),
+    // COMBO(right_ctrl, KC_RCTL),
+    // COMBO(right_alt, KC_RALT),
+    // COMBO(right_sft, KC_RSFT),
+// };
+
+// bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+//     switch (keycode) {
+//         case SHFT_BSPC:
+//             if (record->event.pressed) {
+//                 shft.down  = true;
+//                 shft.hold  = false;
+//                 shft.timer = timer_read();
+//             } else {
+//                 if (!shft.hold && timer_elapsed(shft.timer) < TAPPING_TERM) {
+//                     // TAP: Ctrl+Backspace
+//                     // Option A (cleaner):
+//                     tap_code16(LCTL(KC_BSPC));
+//                     // Option B (what you had, also fine):
+//                     // register_mods(MOD_BIT(KC_LCTL));
+//                     // tap_code(KC_BSPC);
+//                     // unregister_mods(MOD_BIT(KC_LCTL));
+//                 } else {
+//                     // HOLD: stop holding Shift when released
+//                     if (shft.hold) {
+//                         unregister_mods(MOD_BIT(KC_LSFT));  // not tap_code
+//                     }
+//                 }
+//                 shft.down = false;
+//             }
+//             return false; // handled
+//
+//         default:
+//             // Convert to HOLD the moment another key is pressed while SHFT_BSPC is down
+//             if (record->event.pressed) {
+//                 if (shft.down && !shft.hold) {
+//                     register_mods(MOD_BIT(KC_LSFT)); // start holding Shift
+//                     shft.hold = true;
+//                 }
+//             }
+//             return true; // let other keys process normally
+//     }
+// }
