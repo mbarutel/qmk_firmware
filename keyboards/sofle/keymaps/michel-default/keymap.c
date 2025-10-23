@@ -10,15 +10,15 @@
 #define TAB_MED LT(_MED, KC_TAB)
 #define DEL_FUN LT(_FUN, KC_DEL)
 
-#define HM_A LGUI_T(KC_A)
-#define HM_R LALT_T(KC_R)
-#define HM_S LCTL_T(KC_S)
-#define HM_T LSFT_T(KC_T)
+#define HM_Z LGUI_T(KC_Z)
+#define HM_X LALT_T(KC_X)
+#define HM_C LCTL_T(KC_C)
+#define HM_V LSFT_T(KC_V)
 
-#define HM_O RGUI_T(KC_O)
-#define HM_I RALT_T(KC_I)
-#define HM_E RCTL_T(KC_E)
-#define HM_N RSFT_T(KC_N)
+#define HM_SLASH RGUI_T(KC_SLASH)
+#define HM_DOT RALT_T(KC_DOT)
+#define HM_COMMA RCTL_T(KC_COMMA)
+#define HM_M RSFT_T(KC_M)
 /*#define ESC_GUI  MT(MOD_LGUI, KC_ESC)*/
 /*#define SCLN_GUI MT(MOD_RGUI, KC_SCLN)*/
 
@@ -72,13 +72,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT(
       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
       _______,   KC_Q,   KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y, KC_QUOT,  _______,
-      _______,   HM_A,   HM_R,    HM_S,    HM_T,    KC_D,                      KC_H,    HM_N,    HM_E,    HM_I,    HM_O,  _______,
-      _______,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_MUTE,      XXXXXXX,KC_K,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  _______,
+      _______,   KC_A,   KC_R,    KC_S,    KC_T,    KC_D,                      KC_H,    KC_N,    KC_E,    KC_I,    KC_O,  _______,
+      _______,  HM_Z,   HM_X,    HM_C,    HM_V,    KC_B, KC_MUTE,      XXXXXXX,KC_K,    HM_M, HM_COMMA,  HM_DOT, HM_SLASH,  _______,
                      _______, _______, TAB_MED, ESC_MOU, SPC_NAV,        ENT_NUM,  BCSP_SYM, DEL_FUN, _______,_______
     ),
     [_NAV] = LAYOUT(
       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
-      _______, LSFT(KC_F5), KC_F5, KC_F9, KC_F10, KC_F11,                   KC_PSCR, _______, _______, _______, _______, _______,
+      _______, LSFT(KC_F5), KC_F5, KC_F9, KC_F10, KC_F11,                     KC_PSCR, _______, _______, _______, _______, _______,
       _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_BSPC,                   KC_CAPS, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, _______,
       _______, _______, _______, LCTL(KC_F7), KC_F12, LCTL(KC_F12), _______, _______, _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END, _______,
                          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
@@ -87,7 +87,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
       _______, KC_LBRC, KC_AMPR, KC_ASTR, KC_GRV, KC_RBRC,                   _______, _______, _______, _______, _______, _______,
       _______, KC_SCLN, KC_DLR, KC_PERC, KC_CIRC, KC_PLUS,                   KC_BSPC, KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI, _______,
-      _______, KC_EQUAL,  KC_EXLM, KC_AT, KC_HASH, KC_PIPE, _______, _______, _______, _______, _______, _______, _______,  _______,
+      _______, KC_EQUAL,  KC_EXLM, KC_AT, KC_HASH, KC_BSLS, _______, _______, _______, _______, _______, _______, _______,  _______,
                          _______, _______, KC_LPRN, KC_RPRN, KC_MINUS, _______, _______, _______, _______, _______
     ),
     [_NUM] = LAYOUT(
@@ -153,14 +153,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // }
 
 // If you like quick re-taps to *always* be taps on HRMs:
-uint16_t get_quick_tap_term(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-    case HM_A: case HM_R: case HM_S: case HM_T:
-    case HM_N: case HM_E: case HM_I: case HM_O:
-      return 150; // per-key quick-tap window
-  }
-  return QUICK_TAP_TERM;
-}
+// uint16_t get_quick_tap_term(uint16_t keycode, keyrecord_t *record) {
+//   switch (keycode) {
+//     case HM_A: case HM_R: case HM_S: case HM_T:
+//     case HM_N: case HM_E: case HM_I: case HM_O:
+//       return 150; // per-key quick-tap window
+//   }
+//   return QUICK_TAP_TERM;
+// }
 
 // combo_t key_combos[] = {
 //     COMBO(left_ctrl, KC_LCTL),
