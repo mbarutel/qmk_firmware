@@ -120,37 +120,37 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 };
 
-uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-    case HM_A: return 200;   // Pinky
-    case HM_R: return 190;   // Ring
-    case HM_S: return 180;   // Middle
-    case HM_T: return 170;   // Index
-    case HM_N: return 170;
-    case HM_E: return 180;
-    case HM_I: return 190;
-    case HM_O: return 200;
-  }
-  return TAPPING_TERM;
-}
+// uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+//   switch (keycode) {
+//     case HM_A: return 200;   // Pinky
+//     case HM_R: return 190;   // Ring
+//     case HM_S: return 180;   // Middle
+//     case HM_T: return 170;   // Index
+//     case HM_N: return 170;
+//     case HM_E: return 180;
+//     case HM_I: return 190;
+//     case HM_O: return 200;
+//   }
+//   return TAPPING_TERM;
+// }
 
-bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-    case HM_A: case HM_R: case HM_S: case HM_T:
-    case HM_N: case HM_E: case HM_I: case HM_O:
-      return true;  // Only for HRMs (keeps other Mod-Taps normal)
-  }
-  return false;
-}
+// bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
+//   switch (keycode) {
+//     case HM_A: case HM_R: case HM_S: case HM_T:
+//     case HM_N: case HM_E: case HM_I: case HM_O:
+//       return true;  // Only for HRMs (keeps other Mod-Taps normal)
+//   }
+//   return false;
+// }
 
-bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-    case HM_A: case HM_R: case HM_S: case HM_T:
-    case HM_N: case HM_E: case HM_I: case HM_O:
-      return true;
-  }
-  return false;
-}
+// bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
+//   switch (keycode) {
+//     case HM_A: case HM_R: case HM_S: case HM_T:
+//     case HM_N: case HM_E: case HM_I: case HM_O:
+//       return true;
+//   }
+//   return false;
+// }
 
 // If you like quick re-taps to *always* be taps on HRMs:
 uint16_t get_quick_tap_term(uint16_t keycode, keyrecord_t *record) {
