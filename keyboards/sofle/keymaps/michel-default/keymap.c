@@ -138,9 +138,9 @@ bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case HM_A: case HM_R: case HM_S: case HM_T:
     case HM_N: case HM_E: case HM_I: case HM_O:
-      return true;  // Only for HRMs (keeps other Mod-Taps normal)
+      return false;  // Disable for HRMs to allow bilateral combinations
   }
-  return false;
+  return true;  // Enable for other Mod-Taps (layer taps, etc.)
 }
 
 bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
@@ -165,13 +165,13 @@ uint16_t get_quick_tap_term(uint16_t keycode, keyrecord_t *record) {
 // --- Define which keys count as home-row mods on each side (their TAP keys) ---
 static bool is_left_hrm_tap(uint16_t tapkc) {
     switch (tapkc) {
-        case KC_A: case KC_S: case KC_D: case KC_F: return true; // adjust to taste
+        case KC_A: case KC_R: case KC_S: case KC_T: return true;
     }
     return false;
 }
 static bool is_right_hrm_tap(uint16_t tapkc) {
     switch (tapkc) {
-        case KC_J: case KC_K: case KC_L: case KC_SCLN: return true; // adjust to taste
+        case KC_N: case KC_E: case KC_I: case KC_O: return true;
     }
     return false;
 }
@@ -196,8 +196,8 @@ static int idx_of_right(uint16_t tapkc) { // 0..3 for J,K,L,;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // Only care about Mod-Taps
-    if (IS_MOD_TAP(keycode)) {
-        uint16_t tapkc = GET_MOD_TAP_KC(keycode);
+    if (IS_QK_MOD_TAP(keycode)) {
+        uint16_t tapkc = QK_MOD_TAP_GET_TAP_KEYCODE(keycode);
 
         // LEFT HRM bookkeeping
         if (is_left_hrm_tap(tapkc)) {
