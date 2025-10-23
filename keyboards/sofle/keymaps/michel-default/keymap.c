@@ -86,14 +86,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_SYM] = LAYOUT(
       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
       _______, KC_LBRC, KC_AMPR, KC_ASTR, KC_GRV, KC_RBRC,                   _______, _______, _______, _______, _______, _______,
-      _______, KC_SCLN, KC_DLR, KC_PERC, KC_CIRC, KC_PLUS,                   KC_BSPC, KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI, _______,
+      _______, KC_LPRN, KC_DLR, KC_PERC, KC_CIRC, KC_RPRN,                   KC_BSPC, KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI, _______,
       _______, KC_EQUAL,  KC_EXLM, KC_AT, KC_HASH, KC_BSLS, _______, _______, _______, _______, _______, _______, _______,  _______,
-                         _______, _______, KC_LPRN, KC_RPRN, KC_MINUS, _______, _______, _______, _______, _______
+                         _______, _______, KC_SCLN, KC_PLUS, KC_MINUS, _______, _______, _______, _______, _______
     ),
     [_NUM] = LAYOUT(
       _______, _______, _______, _______,  _______, _______,                   _______, _______, _______, _______, _______, _______,
       _______, KC_SLSH, KC_7, KC_8, KC_9, KC_PLUS,                   _______, _______, _______, _______, _______, _______,
-      _______, KC_ASTR, KC_4, KC_5, KC_6, KC_MINS,                   KC_BSPC, KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI, _______,
+      _______, KC_ASTR, KC_4, KC_5, KC_6, KC_MINUS,                   KC_BSPC, KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI, _______,
       _______, KC_DOT,  KC_1, KC_2, KC_3, KC_EQUAL, _______, _______, _______, _______, _______, _______, _______,  _______,
                          _______, _______, _______, KC_0, _______, _______, _______, _______, _______, _______
     ),
