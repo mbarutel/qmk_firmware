@@ -22,7 +22,7 @@
 
 // Auto Shift
 // #define NO_AUTO_SHIFT_ALPHA
-#define AUTO_SHIFT_TIMEOUT 160
+#define AUTO_SHIFT_TIMEOUT 140
 // #define AUTO_SHIFT_NO_SETUP
 
 // Mouse key speed and acceleration.
