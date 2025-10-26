@@ -3,12 +3,12 @@
 
 #pragma once
 
-#define TAPPING_TERM 155
+#define TAPPING_TERM 180
 // #define TAPPING_TERM_PER_KEY
 #define QUICK_TAP_TERM 0
 #define PERMISSIVE_HOLD
 // #define IGNORE_MOD_TAP_INTERRUPT
-// #define HOLD_ON_OTHER_KEY_PRESS
+#define HOLD_ON_OTHER_KEY_PRESS
 // Test these if still needed
 // #define TAPPING_FORCE_HOLD
 // #define RETRO_TAPPING
