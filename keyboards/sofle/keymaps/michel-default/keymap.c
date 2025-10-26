@@ -10,15 +10,15 @@
 #define TAB_MED LT(_MED, KC_TAB)
 #define DEL_FUN LT(_FUN, KC_DEL)
 
-#define HM_Z LGUI_T(KC_Z)
-#define HM_X LALT_T(KC_X)
-#define HM_C LCTL_T(KC_C)
-#define HM_V LSFT_T(KC_V)
-
-#define HM_SLASH RGUI_T(KC_SLASH)
-#define HM_DOT RALT_T(KC_DOT)
-#define HM_COMMA RCTL_T(KC_COMMA)
-#define HM_M RSFT_T(KC_M)
+// #define HM_Z LGUI_T(KC_Z)
+// #define HM_X LALT_T(KC_X)
+// #define HM_C LCTL_T(KC_C)
+// #define HM_V LSFT_T(KC_V)
+//
+// #define HM_SLASH RGUI_T(KC_SLASH)
+// #define HM_DOT RALT_T(KC_DOT)
+// #define HM_COMMA RCTL_T(KC_COMMA)
+// #define HM_M RSFT_T(KC_M)
 /*#define ESC_GUI  MT(MOD_LGUI, KC_ESC)*/
 /*#define SCLN_GUI MT(MOD_RGUI, KC_SCLN)*/
 
@@ -73,7 +73,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
       _______,   KC_Q,   KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y, KC_QUOT,  _______,
       _______,   KC_A,   KC_R,    KC_S,    KC_T,    KC_D,                      KC_H,    KC_N,    KC_E,    KC_I,    KC_O,  _______,
-      _______,  HM_Z,   HM_X,    HM_C,    HM_V,    KC_B, KC_MUTE,      XXXXXXX,KC_K,    HM_M, HM_COMMA,  HM_DOT, HM_SLASH,  _______,
+      _______,   KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_MUTE,      XXXXXXX,KC_K,    KC_M, KC_COMMA,  KC_DOT, KC_SLASH,  _______,
                      _______, _______, TAB_MED, ESC_MOU, SPC_NAV,        ENT_NUM,  BCSP_SYM, DEL_FUN, _______,_______
     ),
     [_NAV] = LAYOUT(
@@ -85,10 +85,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_SYM] = LAYOUT(
       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
-      _______, KC_LBRC, KC_AMPR, KC_ASTR, KC_GRV, KC_RBRC,                   _______, _______, _______, _______, _______, _______,
+      _______, KC_LBRC, KC_AMPR, KC_ASTR, KC_EQUAL, KC_RBRC,                   _______, _______, _______, _______, _______, _______,
       _______, KC_LPRN, KC_DLR, KC_PERC, KC_CIRC, KC_RPRN,                   KC_BSPC, KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI, _______,
-      _______, KC_EQUAL,  KC_EXLM, KC_AT, KC_HASH, KC_BSLS, _______, _______, _______, _______, _______, _______, _______,  _______,
-                         _______, _______, KC_SCLN, KC_PLUS, KC_MINUS, _______, _______, _______, _______, _______
+      _______, KC_GRV,  KC_EXLM, KC_AT, KC_HASH, KC_BSLS, _______, _______, _______, _______, _______, _______, _______,  _______,
+                         _______, _______, KC_PLUS, KC_SCLN, KC_MINUS, _______, _______, _______, _______, _______
     ),
     [_NUM] = LAYOUT(
       _______, _______, _______, _______,  _______, _______,                   _______, _______, _______, _______, _______, _______,
@@ -122,25 +122,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 // uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 //   switch (keycode) {
-//     case HM_A: return 200;   // Pinky
-//     case HM_R: return 190;   // Ring
-//     case HM_S: return 180;   // Middle
-//     case HM_T: return 170;   // Index
-//     case HM_N: return 170;
-//     case HM_E: return 180;
-//     case HM_I: return 190;
-//     case HM_O: return 200;
+//     case HM_Z: return 250;   // Pinky
+//     case HM_X: return 250;   // Ring
+//     case HM_C: return 250;   // Middle
+//     case HM_V: return 250;   // Index
+//     case HM_M: return 250;
+//     case HM_COMMA: return 250;
+//     case HM_DOT: return 250;
+//     case HM_SLASH: return 250;
 //   }
 //   return TAPPING_TERM;
 // }
 
 // bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
 //   switch (keycode) {
-//     case HM_A: case HM_R: case HM_S: case HM_T:
-//     case HM_N: case HM_E: case HM_I: case HM_O:
-//       return true;  // Only for HRMs (keeps other Mod-Taps normal)
+//     case HM_Z: case HM_X: case HM_C: case HM_V:
+//     case HM_M: case HM_COMMA: case HM_DOT: case HM_SLASH:
+//       return false;  // Only for HRMs (keeps other Mod-Taps normal)
 //   }
-//   return false;
+//   return true;
 // }
 
 // bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
