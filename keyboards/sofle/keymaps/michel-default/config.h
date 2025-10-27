@@ -3,7 +3,7 @@
 
 #pragma once
 
-#define TAPPING_TERM 180
+#define TAPPING_TERM 60
 #define QUICK_TAP_TERM 0
 #define PERMISSIVE_HOLD
 #define HOLD_ON_OTHER_KEY_PRESS
@@ -18,7 +18,7 @@
 
 // Auto Shift
 // #define NO_AUTO_SHIFT_ALPHA
-#define AUTO_SHIFT_TIMEOUT 150
+#define AUTO_SHIFT_TIMEOUT 140
 // #define AUTO_SHIFT_NO_SETUP
 
 // Mouse key speed and acceleration.
