@@ -124,28 +124,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 };
 
-// uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-//   switch (keycode) {
-//     case HM_Z: return 250;   // Pinky
-//     case HM_X: return 250;   // Ring
-//     case HM_C: return 250;   // Middle
-//     case HM_V: return 250;   // Index
-//     case HM_M: return 250;
-//     case HM_COMMA: return 250;
-//     case HM_DOT: return 250;
-//     case HM_SLASH: return 250;
-//   }
-//   return TAPPING_TERM;
-// }
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case SPC_NAV: return 220;
+  }
+  return TAPPING_TERM;
+}
 
 // bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
 //   switch (keycode) {
-//     case HM_Z: case HM_X: case HM_C: case HM_V:
-//     case HM_M: case HM_COMMA: case HM_DOT: case HM_SLASH:
+//     case SPC_NAV:
 //       return false;  // Only for HRMs (keeps other Mod-Taps normal)
 //   }
 //   return true;
 // }
+
+bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case SPC_NAV:
+      return false;  // Only for HRMs (keeps other Mod-Taps normal)
+  }
+  return true;
+}
 
 // bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
 //   switch (keycode) {
