@@ -126,12 +126,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    case SPC_NAV: return 220;
+    case SPC_NAV: case ENT_NUM:
+            return 220;
   }
   return TAPPING_TERM;
 }
 
-// bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
+// bool get_permissive_hold(uint16_t keycode, keyrecord_t *record {
 //   switch (keycode) {
 //     case SPC_NAV:
 //       return false;  // Only for HRMs (keeps other Mod-Taps normal)
@@ -141,8 +142,8 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    case SPC_NAV:
-      return false;  // Only for HRMs (keeps other Mod-Taps normal)
+    case SPC_NAV: case ENT_NUM:
+      return false;
   }
   return true;
 }
