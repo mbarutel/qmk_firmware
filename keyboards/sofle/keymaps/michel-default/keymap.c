@@ -62,14 +62,18 @@ enum sofle_layers {
 // static single_state_t qg = {0};
 
 const uint16_t PROGMEM left_ret[] = {KC_T, KC_D, COMBO_END};
-// const uint16_t PROGMEM left_ctrl[] = {KC_S, KC_T, COMBO_END};
-// const uint16_t PROGMEM left_alt[] = {KC_T, KC_D, COMBO_END};
+const uint16_t PROGMEM left_ctrl[] = {KC_S, KC_T, COMBO_END};
+const uint16_t PROGMEM left_alt[] = {KC_R, KC_S, COMBO_END};
 // const uint16_t PROGMEM left_sft[] = {KC_M, KC_E, COMBO_END};
-// const uint16_t PROGMEM right_ctrl[] = {KC_N, KC_E, COMBO_END};
-// const uint16_t PROGMEM right_alt[] = {KC_N, KC_H, COMBO_END};
+const uint16_t PROGMEM right_ctrl[] = {KC_N, KC_E, COMBO_END};
+const uint16_t PROGMEM right_alt[] = {KC_E, KC_I, COMBO_END};
 // const uint16_t PROGMEM right_sft[] = {KC_V, KC_S, COMBO_END};
 combo_t key_combos[] = {
-    COMBO(left_ret, KC_ENT)
+    COMBO(left_ret, KC_ENT),
+    COMBO(left_ctrl, KC_LCTL),
+    COMBO(left_alt, KC_LALT),
+    COMBO(right_ctrl, KC_RCTL),
+    COMBO(right_alt, KC_RALT),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -127,7 +131,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case SPC_NAV: case ENT_NUM:
-            return 220;
+            return 180;
   }
   return TAPPING_TERM;
 }

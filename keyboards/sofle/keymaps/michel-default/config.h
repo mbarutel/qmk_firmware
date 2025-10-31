@@ -3,7 +3,7 @@
 
 #pragma once
 
-#define TAPPING_TERM 160
+#define TAPPING_TERM 140
 #define QUICK_TAP_TERM 0
 // #define PERMISSIVE_HOLD
 #define HOLD_ON_OTHER_KEY_PRESS
@@ -14,12 +14,12 @@
 
 
 // Optional: combo config
-// #define COMBO_COUNT 2
-// #define COMBO_TERM 30
+#define COMBO_COUNT 5
+#define COMBO_TERM 20
 
 // Auto Shift
 // #define NO_AUTO_SHIFT_ALPHA
-#define AUTO_SHIFT_TIMEOUT 140
+#define AUTO_SHIFT_TIMEOUT 130
 // #define AUTO_SHIFT_NO_SETUP
 
 // Mouse key speed and acceleration.
