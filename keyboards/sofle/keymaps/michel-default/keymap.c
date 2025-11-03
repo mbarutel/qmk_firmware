@@ -116,3 +116,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     return true;
 }
+
+uint16_t get_autoshift_timeout(uint16_t keycode, keyrecord_t *record) {
+  switch(keycode) {
+    case KC_Q: case KC_A: case KC_Z:
+    case KC_SCLN: case KC_O: case KC_SLSH:
+      return 140;
+  }
+
+  return AUTO_SHIFT_TIMEOUT;
+}
