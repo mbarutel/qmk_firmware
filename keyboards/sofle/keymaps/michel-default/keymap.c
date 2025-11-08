@@ -27,15 +27,19 @@ enum custom_keycodes {
 const uint16_t PROGMEM left_ret[] = {KC_T, KC_D, COMBO_END};
 const uint16_t PROGMEM left_ctrl[] = {KC_S, KC_T, COMBO_END};
 const uint16_t PROGMEM left_alt[] = {KC_R, KC_S, COMBO_END};
+const uint16_t PROGMEM left_gui[] = {KC_C, KC_V, COMBO_END};
 const uint16_t PROGMEM right_ctrl[] = {KC_N, KC_E, COMBO_END};
 const uint16_t PROGMEM right_alt[] = {KC_E, KC_I, COMBO_END};
+const uint16_t PROGMEM right_gui[] = {KC_COMMA, KC_M, COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(left_ret, KC_ENT),
     COMBO(left_ctrl, KC_LCTL),
     COMBO(left_alt, KC_LALT),
+    COMBO(left_gui, KC_LGUI),
     COMBO(right_ctrl, KC_RCTL),
     COMBO(right_alt, KC_RALT),
+    COMBO(right_gui, KC_RGUI),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -86,7 +90,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, LSFT(KC_F5), KC_F5, KC_F9, KC_F10, KC_F11,                     KC_PSCR, _______, _______, _______, _______, _______,
       _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, LCTL(KC_B),                   KC_CAPS, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, _______,
       _______, TG(_NUM), _______, LCTL(KC_F7), KC_F12, LCTL(KC_F12), _______, _______, _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END, _______,
-                         _______, _______, _______, _______, _______, _______, LCTL(KC_BSPC), LCTL(KC_DEL), _______, _______
+                         _______, _______, _______, _______, _______, RSFT(KC_ENT), LCTL(KC_BSPC), LCTL(KC_DEL), _______, _______
     ),
 };
 
