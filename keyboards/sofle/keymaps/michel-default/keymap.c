@@ -59,7 +59,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_MOU] = LAYOUT(
       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
-      _______, LCTL(KC_W), LSFT(KC_F2), LSFT(KC_F3), LSFT(KC_F4), _______, _______, RGUI(KC_G), RGUI(KC_E), RGUI(KC_I), RGUI(KC_SCLN), _______,
+      _______, LCTL(KC_W), LSFT(KC_F2), LSFT(KC_F3), LSFT(KC_F4), _______, RGUI(KC_TAB), RGUI(KC_LEFT), RGUI(KC_E), RGUI(KC_I), RGUI(KC_RIGHT), _______,
       _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, LCTL(KC_B),                   _______, MS_LEFT, MS_DOWN, MS_UP, MS_RGHT, _______,
       _______, LCTL(KC_A), LCTL(KC_X), LCTL(KC_C), LCTL(KC_V), _______, _______, _______, _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR, _______,
                          _______, _______, _______, _______, _______, MS_BTN1, MS_BTN2, MS_BTN3, _______, _______
