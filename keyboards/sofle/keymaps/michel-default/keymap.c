@@ -24,6 +24,114 @@ enum custom_keycodes {
     COLON_EQ = SAFE_RANGE,
 };
 
+// Tap Dance declarations
+enum {
+    TD_E_LEFT,    // Tap: RGUI(KC_E), Hold: RGUI(KC_LEFT)
+    TD_I_RIGHT,   // Tap: RGUI(KC_I), Hold: RGUI(KC_RIGHT)
+};
+
+// Tap Dance state
+typedef struct {
+    bool is_press_action;
+    uint8_t state;
+} tap_state_t;
+
+enum {
+    SINGLE_TAP = 1,
+    SINGLE_HOLD,
+    DOUBLE_TAP,
+    DOUBLE_HOLD,
+    DOUBLE_SINGLE_TAP,
+    MORE_TAPS
+};
+
+// Function to determine the current tap dance state
+static uint8_t dance_step(tap_dance_state_t *state) {
+    if (state->count == 1) {
+        if (state->interrupted || !state->pressed) return SINGLE_TAP;
+        else return SINGLE_HOLD;
+    } else if (state->count == 2) {
+        if (state->interrupted) return DOUBLE_SINGLE_TAP;
+        else if (state->pressed) return DOUBLE_HOLD;
+        else return DOUBLE_TAP;
+    }
+    return MORE_TAPS;
+}
+
+// TD_E_LEFT tap dance functions
+static tap_state_t td_e_left_state = {
+    .is_press_action = true,
+    .state = 0
+};
+
+void td_e_left_finished(tap_dance_state_t *state, void *user_data) {
+    td_e_left_state.state = dance_step(state);
+    switch (td_e_left_state.state) {
+        case SINGLE_TAP:
+            register_code(KC_RGUI);
+            register_code(KC_E);
+            break;
+        case SINGLE_HOLD:
+            register_code(KC_RGUI);
+            register_code(KC_LEFT);
+            break;
+    }
+}
+
+void td_e_left_reset(tap_dance_state_t *state, void *user_data) {
+    switch (td_e_left_state.state) {
+        case SINGLE_TAP:
+            unregister_code(KC_E);
+            unregister_code(KC_RGUI);
+            break;
+        case SINGLE_HOLD:
+            unregister_code(KC_LEFT);
+            unregister_code(KC_RGUI);
+            break;
+    }
+    td_e_left_state.state = 0;
+}
+
+// TD_I_RIGHT tap dance functions
+static tap_state_t td_i_right_state = {
+    .is_press_action = true,
+    .state = 0
+};
+
+void td_i_right_finished(tap_dance_state_t *state, void *user_data) {
+    td_i_right_state.state = dance_step(state);
+    switch (td_i_right_state.state) {
+        case SINGLE_TAP:
+            register_code(KC_RGUI);
+            register_code(KC_I);
+            break;
+        case SINGLE_HOLD:
+            register_code(KC_RGUI);
+            register_code(KC_RIGHT);
+            break;
+    }
+}
+
+void td_i_right_reset(tap_dance_state_t *state, void *user_data) {
+    switch (td_i_right_state.state) {
+        case SINGLE_TAP:
+            unregister_code(KC_I);
+            unregister_code(KC_RGUI);
+            break;
+        case SINGLE_HOLD:
+            unregister_code(KC_RIGHT);
+            unregister_code(KC_RGUI);
+            break;
+    }
+    td_i_right_state.state = 0;
+}
+
+// Tap Dance definitions
+tap_dance_action_t tap_dance_actions[] = {
+    [TD_E_LEFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_e_left_finished, td_e_left_reset),
+    [TD_I_RIGHT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_i_right_finished, td_i_right_reset),
+};
+
 const uint16_t PROGMEM left_ret[] = {KC_T, KC_D, COMBO_END};
 const uint16_t PROGMEM left_ctrl[] = {KC_S, KC_T, COMBO_END};
 const uint16_t PROGMEM left_alt[] = {KC_R, KC_S, COMBO_END};
@@ -59,7 +167,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_MOU] = LAYOUT(
       _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
-      _______, LCTL(KC_W), LSFT(KC_F2), LSFT(KC_F3), LSFT(KC_F4), _______, RGUI(KC_TAB), RGUI(KC_LEFT), RGUI(KC_E), RGUI(KC_I), RGUI(KC_RIGHT), _______,
+      _______, LCTL(KC_W), LSFT(KC_F2), LSFT(KC_F3), LSFT(KC_F4), _______, RGUI(KC_TAB), RGUI(KC_G), TD(TD_E_LEFT), TD(TD_I_RIGHT), RGUI(KC_SCLN), _______,
       _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, LCTL(KC_B),                   _______, MS_LEFT, MS_DOWN, MS_UP, MS_RGHT, _______,
       _______, LCTL(KC_A), LCTL(KC_X), LCTL(KC_C), LCTL(KC_V), _______, _______, _______, _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR, _______,
                          _______, _______, _______, _______, _______, MS_BTN1, MS_BTN2, MS_BTN3, _______, _______
