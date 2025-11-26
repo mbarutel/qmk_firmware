@@ -7,8 +7,8 @@
 #define BSCP_NUM  LT(_NUM, KC_BSPC)
 #define DEL_SYM LT(_SYM, KC_DEL)
 #define ESC_MOU LT(_MOU, KC_ESC)
-#define TAB_MED LT(_MED, KC_TAB)
-#define ENT_FUN LT(_FUN, KC_ENT)
+#define ENT_MED LT(_MED, KC_ENT)
+#define TAB_FUN LT(_FUN, KC_TAB)
 
 enum cheapino_layers {
     _BASE,
@@ -155,7 +155,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_Q,   KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y, KC_QUOT,
       KC_A,   KC_R,    KC_S,    KC_T,    KC_D,                      KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
       KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,                      KC_K,    KC_M, KC_COMMA,  KC_DOT, KC_SLASH,
-                    ESC_MOU, SPC_NAV, TAB_MED,        ENT_FUN, BSCP_NUM,  DEL_SYM
+                    ESC_MOU, SPC_NAV, ENT_MED,        TAB_FUN, BSCP_NUM,  DEL_SYM
     ),
     [_SYM] = LAYOUT_split_3x5_3(
       KC_LBRC, KC_AMPR, KC_ASTR, KC_EQUAL, KC_RBRC,                   _______, _______, _______, _______, _______,
@@ -185,13 +185,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_SLSH, KC_7, KC_8, KC_9, KC_PLUS,                   _______, _______, _______, _______, _______,
       KC_ASTR, KC_4, KC_5, KC_6, KC_MINUS,                   RCTL(KC_B), KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI,
       KC_DOT,  KC_1, KC_2, KC_3, KC_EQUAL,                   _______, _______, _______, _______, _______,
-                         KC_0, _______, _______,        _______, _______, _______
+                         KC_0, _______, LSFT(KC_ENT),        _______, _______, _______
     ),
     [_NAV] = LAYOUT_split_3x5_3(
       LSFT(KC_F5), KC_F5, KC_F9, KC_F10, KC_F11,                     KC_PSCR, _______, _______, _______, _______,
       KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, LCTL(KC_B),                   KC_CAPS, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT,
       TG(_NUM), _______, LCTL(KC_F7), KC_F12, LCTL(KC_F12),         _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END,
-                        _______, _______, _______,       LSFT(KC_ENT), RCTL(KC_BSPC), LCTL(KC_DEL)
+                        _______, _______, _______,       _______, RCTL(KC_BSPC), LCTL(KC_DEL)
     ),
 };
 
