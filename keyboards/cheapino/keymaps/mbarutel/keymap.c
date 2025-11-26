@@ -4,11 +4,11 @@
 #include "quantum.h"
 
 #define SPC_NAV  LT(_NAV, KC_SPC)
-#define BSCP_NUM  LT(_NUM, KC_BSPC)
-#define DEL_SYM LT(_SYM, KC_DEL)
+#define BSCP_SYM  LT(_SYM, KC_BSPC)
+#define DEL_FUN LT(_FUN, KC_DEL)
 #define ESC_MOU LT(_MOU, KC_ESC)
 #define ENT_MED LT(_MED, KC_ENT)
-#define TAB_FUN LT(_FUN, KC_TAB)
+#define TAB_NUM LT(_NUM, KC_TAB)
 
 enum cheapino_layers {
     _BASE,
@@ -155,7 +155,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_Q,   KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y, KC_QUOT,
       KC_A,   KC_R,    KC_S,    KC_T,    KC_D,                      KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
       KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,                      KC_K,    KC_M, KC_COMMA,  KC_DOT, KC_SLASH,
-                    ESC_MOU, SPC_NAV, ENT_MED,        TAB_FUN, BSCP_NUM,  DEL_SYM
+                    ESC_MOU, SPC_NAV, ENT_MED,        TAB_NUM, BSCP_SYM,  DEL_FUN
     ),
     [_SYM] = LAYOUT_split_3x5_3(
       KC_LBRC, KC_AMPR, KC_ASTR, KC_EQUAL, KC_RBRC,                   _______, _______, _______, _______, _______,
@@ -197,7 +197,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    case SPC_NAV: case BSCP_NUM:
+    case SPC_NAV: case BSCP_SYM:
             return 160;
   }
   return TAPPING_TERM;
@@ -205,7 +205,7 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    case SPC_NAV: case BSCP_NUM:
+    case SPC_NAV: case BSCP_SYM:
       return false;
   }
   return true;
