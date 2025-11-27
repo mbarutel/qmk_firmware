@@ -4,11 +4,11 @@
 #include "quantum.h"
 
 #define SPC_NAV  LT(_NAV, KC_SPC)
-#define BSCP_SYM  LT(_SYM, KC_BSPC)
-#define DEL_FUN LT(_FUN, KC_DEL)
+#define BSCP_NUM  LT(_NUM, KC_BSPC)
+#define DEL_SYM LT(_SYM, KC_DEL)
 #define ESC_MOU LT(_MOU, KC_ESC)
 #define ENT_MED LT(_MED, KC_ENT)
-#define TAB_NUM LT(_NUM, KC_TAB)
+#define TAB_FUN LT(_FUN, KC_TAB)
 
 enum cheapino_layers {
     _BASE,
@@ -132,7 +132,6 @@ tap_dance_action_t tap_dance_actions[] = {
     [TD_I_RIGHT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_i_right_finished, td_i_right_reset),
 };
 
-const uint16_t PROGMEM left_ret[] = {KC_T, KC_D, COMBO_END};
 const uint16_t PROGMEM left_ctrl[] = {KC_S, KC_T, COMBO_END};
 const uint16_t PROGMEM left_alt[] = {KC_R, KC_S, COMBO_END};
 const uint16_t PROGMEM left_gui[] = {KC_C, KC_V, COMBO_END};
@@ -141,7 +140,6 @@ const uint16_t PROGMEM right_alt[] = {KC_E, KC_I, COMBO_END};
 const uint16_t PROGMEM right_gui[] = {KC_COMMA, KC_M, COMBO_END};
 
 combo_t key_combos[] = {
-    COMBO(left_ret, KC_ENT),
     COMBO(left_ctrl, KC_LCTL),
     COMBO(left_alt, KC_LALT),
     COMBO(left_gui, KC_LGUI),
@@ -155,19 +153,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_Q,   KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y, KC_QUOT,
       KC_A,   KC_R,    KC_S,    KC_T,    KC_D,                      KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
       KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,                      KC_K,    KC_M, KC_COMMA,  KC_DOT, KC_SLASH,
-                    ESC_MOU, SPC_NAV, ENT_MED,        TAB_NUM, BSCP_SYM,  DEL_FUN
+                    ESC_MOU, SPC_NAV, ENT_MED,        TAB_FUN, BSCP_NUM,  DEL_SYM
     ),
     [_SYM] = LAYOUT_split_3x5_3(
       KC_LBRC, KC_AMPR, KC_ASTR, KC_EQUAL, KC_RBRC,                   _______, _______, _______, _______, _______,
       KC_LPRN, KC_DLR, KC_PERC, KC_CIRC, KC_RPRN,                   RCTL(KC_B), KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI,
       KC_GRV,  KC_EXLM, KC_AT, KC_HASH, KC_BSLS,                   _______, _______, _______, _______, _______,
-                         KC_SCLN, KC_MINUS, COLON_EQ,         _______, _______, _______
+                         KC_MINUS, KC_SCLN, COLON_EQ,         _______, _______, _______
     ),
     [_MOU] = LAYOUT_split_3x5_3(
       LCTL(KC_W), LSFT(KC_F2), LSFT(KC_F3), LSFT(KC_F4), _______,        RGUI(KC_TAB), RGUI(KC_G), TD(TD_E_LEFT), TD(TD_I_RIGHT), RGUI(KC_SCLN),
       KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, LCTL(KC_B),                   _______, MS_LEFT, MS_DOWN, MS_UP, MS_RGHT,
       LCTL(KC_A), LCTL(KC_X), LCTL(KC_C), LCTL(KC_V), _______,         _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
-                         _______, _______, _______,       MS_BTN3, MS_BTN1, MS_BTN2
+                         _______, _______, _______,     MS_BTN1, MS_BTN2, MS_BTN3
     ),
     [_FUN] = LAYOUT_split_3x5_3(
       KC_F12, KC_F7, KC_F8, KC_F9, QK_BOOT,                  _______, _______, _______, _______, _______,
@@ -197,7 +195,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    case SPC_NAV: case BSCP_SYM:
+    case SPC_NAV: case BSCP_NUM:
             return 160;
   }
   return TAPPING_TERM;
@@ -205,7 +203,7 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    case SPC_NAV: case BSCP_SYM:
+    case SPC_NAV: case BSCP_NUM:
       return false;
   }
   return true;

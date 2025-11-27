@@ -32,8 +32,13 @@ if ! command -v qmk >/dev/null 2>&1; then
   exit 1
 fi
 
-# QMK build directory
-BUILD_DIR="${HOME}/qmk_firmware/.build"
+# QMK build directory - use SUDO_USER's home if running with sudo
+if [ -n "${SUDO_USER:-}" ]; then
+  USER_HOME=$(eval echo ~"${SUDO_USER}")
+else
+  USER_HOME="${HOME}"
+fi
+BUILD_DIR="${USER_HOME}/qmk_firmware/.build"
 
 echo "=== Cleaning old UF2s to avoid conflicts ==="
 rm -f "${BUILD_DIR}"/*.uf2 || true
@@ -47,17 +52,19 @@ fi
 
 echo
 echo "=== Step 2: Locating the newly-built UF2 file ==="
+echo "Searching in: ${BUILD_DIR}"
 # Find the most recently modified UF2 file
-UF2_FILE=$(ls -t "${BUILD_DIR}"/*.uf2 2>/dev/null | head -1)
+UF2_FILE=$(find "${BUILD_DIR}" -maxdepth 1 -name "*.uf2" -type f -printf '%T@ %p\n' 2>/dev/null | sort -rn | head -1 | cut -d' ' -f2-)
 
 if [ -z "$UF2_FILE" ] || [ ! -f "$UF2_FILE" ]; then
   echo "Error: No UF2 file produced by this build."
   echo "Build directory: ${BUILD_DIR}"
-  echo "Check the build directory for compilation artifacts."
+  echo "Available files:"
+  ls -lh "${BUILD_DIR}"/*.uf2 2>/dev/null || echo "  (no .uf2 files found)"
   exit 1
 fi
 
-echo "Using UF2: $UF2_FILE"
+echo "✓ Found UF2: $UF2_FILE"
 echo
 
 echo "=== Step 3: Waiting for RP2040 in BOOTSEL mode ==="
