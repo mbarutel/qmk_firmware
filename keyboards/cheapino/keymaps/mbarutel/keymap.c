@@ -5,10 +5,10 @@
 
 #define SPC_NAV  LT(_NAV, KC_SPC)
 #define BSCP_NUM  LT(_NUM, KC_BSPC)
-#define DEL_SYM LT(_SYM, KC_DEL)
+#define TAB_SYM LT(_SYM, KC_DEL)
 #define ESC_MOU LT(_MOU, KC_ESC)
 #define ENT_MED LT(_MED, KC_ENT)
-#define TAB_FUN LT(_FUN, KC_TAB)
+#define DEL_FUN LT(_FUN, KC_DEL)
 
 enum cheapino_layers {
     _BASE,
@@ -153,16 +153,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_Q,   KC_W,    KC_F,    KC_P,    KC_G,                      KC_J,    KC_L,    KC_U,    KC_Y, KC_QUOT,
       KC_A,   KC_R,    KC_S,    KC_T,    KC_D,                      KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
       KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,                      KC_K,    KC_M, KC_COMMA,  KC_DOT, KC_SLASH,
-                    ESC_MOU, SPC_NAV, ENT_MED,        TAB_FUN, BSCP_NUM,  DEL_SYM
+                    ESC_MOU, SPC_NAV, ENT_MED,        DEL_FUN, BSCP_NUM,  TAB_SYM
     ),
     [_SYM] = LAYOUT_split_3x5_3(
       KC_LBRC, KC_AMPR, KC_ASTR, KC_EQUAL, KC_RBRC,                   _______, _______, _______, _______, _______,
       KC_LPRN, KC_DLR, KC_PERC, KC_CIRC, KC_RPRN,                   RCTL(KC_B), KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI,
       KC_GRV,  KC_EXLM, KC_AT, KC_HASH, KC_BSLS,                   _______, _______, _______, _______, _______,
-                         KC_MINUS, KC_SCLN, COLON_EQ,         _______, _______, _______
+                         KC_SCLN, KC_MINUS, COLON_EQ,         _______, _______, _______
     ),
     [_MOU] = LAYOUT_split_3x5_3(
-      LCTL(KC_W), LSFT(KC_F2), LSFT(KC_F3), LSFT(KC_F4), _______,        RGUI(KC_TAB), RGUI(KC_G), TD(TD_E_LEFT), TD(TD_I_RIGHT), RGUI(KC_SCLN),
+      LCTL(KC_W), LSFT(KC_F2), LSFT(KC_F3), LSFT(KC_F4), _______,        _______, _______, _______, _______, _______,
       KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, LCTL(KC_B),                   _______, MS_LEFT, MS_DOWN, MS_UP, MS_RGHT,
       LCTL(KC_A), LCTL(KC_X), LCTL(KC_C), LCTL(KC_V), _______,         _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
                          _______, _______, _______,     MS_BTN1, MS_BTN2, MS_BTN3
@@ -174,8 +174,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                          _______, _______, _______,        _______, _______, _______
     ),
     [_MED] = LAYOUT_split_3x5_3(
-      _______, _______, _______, _______, _______,                   KC_FIND, KC_PASTE, KC_COPY, KC_CUT, KC_UNDO,
-      KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, LCTL(KC_B),                   _______, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
+      _______, _______, _______, SGUI(KC_R), SGUI(KC_ENT),                   KC_FIND, KC_PASTE, KC_COPY, KC_CUT, KC_UNDO,
+      KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, LCTL(KC_B),                   KC_PSCR, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
       _______, _______, _______, _______, _______,                   _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
                          _______, _______, _______,        KC_MSTP, KC_MPLY, KC_MUTE
     ),
@@ -186,7 +186,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                          KC_0, _______, LSFT(KC_ENT),        _______, _______, _______
     ),
     [_NAV] = LAYOUT_split_3x5_3(
-      LSFT(KC_F5), KC_F5, KC_F9, KC_F10, KC_F11,                     KC_PSCR, _______, _______, _______, _______,
+      LSFT(KC_F5), KC_F5, KC_F9, KC_F10, KC_F11,                     RGUI(KC_TAB), RGUI(KC_G), TD(TD_E_LEFT), TD(TD_I_RIGHT), RGUI(KC_SCLN),
       KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, LCTL(KC_B),                   KC_CAPS, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT,
       TG(_NUM), _______, LCTL(KC_F7), KC_F12, LCTL(KC_F12),         _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END,
                         _______, _______, _______,       _______, RCTL(KC_BSPC), LCTL(KC_DEL)
@@ -219,13 +219,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     return true;
 }
-
-uint16_t get_autoshift_timeout(uint16_t keycode, keyrecord_t *record) {
-  switch(keycode) {
-    case KC_Q: case KC_A: case KC_Z:
-    case KC_SCLN: case KC_O: case KC_SLSH:
-      return 160;
-  }
-
-  return AUTO_SHIFT_TIMEOUT;
-}
+//
+// uint16_t get_autoshift_timeout(uint16_t keycode, keyrecord_t *record) {
+//   switch(keycode) {
+//     case KC_Q: case KC_A: case KC_Z:
+//     case KC_SCLN: case KC_O: case KC_SLSH:
+//       return 160;
+//   }
+//
+//   return AUTO_SHIFT_TIMEOUT;
+// }
