@@ -5,7 +5,7 @@
 
 #define SPC_NAV  LT(_NAV, KC_SPC)
 #define BSCP_NUM  LT(_NUM, KC_BSPC)
-#define TAB_SYM LT(_SYM, KC_DEL)
+#define TAB_SYM LT(_SYM, KC_TAB)
 #define ESC_MOU LT(_MOU, KC_ESC)
 #define ENT_MED LT(_MED, KC_ENT)
 #define DEL_FUN LT(_FUN, KC_DEL)
@@ -189,7 +189,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       LSFT(KC_F5), KC_F5, KC_F9, KC_F10, KC_F11,                     RGUI(KC_TAB), RGUI(KC_G), TD(TD_E_LEFT), TD(TD_I_RIGHT), RGUI(KC_SCLN),
       KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, LCTL(KC_B),                   KC_CAPS, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT,
       TG(_NUM), _______, LCTL(KC_F7), KC_F12, LCTL(KC_F12),         _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END,
-                        _______, _______, _______,       _______, RCTL(KC_BSPC), LCTL(KC_DEL)
+                        _______, _______, _______,       LCTL(KC_DEL), RCTL(KC_BSPC), LSFT(KC_TAB)
     ),
 };
 
