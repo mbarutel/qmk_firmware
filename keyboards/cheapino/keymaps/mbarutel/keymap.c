@@ -170,7 +170,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_MOU] = LAYOUT_split_3x5_3(
       LCTL(KC_W), LSFT(KC_F2), LSFT(KC_F3), LSFT(KC_F4), _______,        _______, _______, _______, _______, _______,
       KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, LCTL(KC_B),                   _______, MS_LEFT, MS_DOWN, MS_UP, MS_RGHT,
-      OS_SELALL,  OS_CUT,  OS_COPY, OS_PASTE, OS_UNDO,                  _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
+      OS_UNDO,  OS_CUT,  OS_COPY, OS_PASTE, OS_SELALL,                  _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
                          _______, _______, _______,     MS_BTN1, MS_BTN2, MS_BTN3
     ),
     [_FUN] = LAYOUT_split_3x5_3(
