@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include QMK_KEYBOARD_H
 #include "quantum.h"
+#include "os_detection.h"
 
 #define SPC_NAV  LT(_NAV, KC_SPC)
 #define BSCP_NUM  LT(_NUM, KC_BSPC)
@@ -22,6 +23,11 @@ enum cheapino_layers {
 
 enum custom_keycodes {
     COLON_EQ = SAFE_RANGE,
+    OS_COPY,
+    OS_PASTE,
+    OS_CUT,
+    OS_UNDO,
+    OS_SELALL,
 };
 
 // Tap Dance declarations
@@ -164,7 +170,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_MOU] = LAYOUT_split_3x5_3(
       LCTL(KC_W), LSFT(KC_F2), LSFT(KC_F3), LSFT(KC_F4), _______,        _______, _______, _______, _______, _______,
       KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, LCTL(KC_B),                   _______, MS_LEFT, MS_DOWN, MS_UP, MS_RGHT,
-      LCTL(KC_A), LCTL(KC_X), LCTL(KC_C), LCTL(KC_V), _______,         _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
+      OS_SELALL,  OS_CUT,  OS_COPY, OS_PASTE, OS_UNDO,                  _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
                          _______, _______, _______,     MS_BTN1, MS_BTN2, MS_BTN3
     ),
     [_FUN] = LAYOUT_split_3x5_3(
@@ -209,23 +215,71 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
+// Helper to get the correct modifier for the detected OS
+static uint16_t get_os_mod(void) {
+    switch (detected_host_os()) {
+        case OS_MACOS:
+        case OS_IOS:
+            return KC_LGUI;
+        default:  // Windows, Linux, etc.
+            return KC_LCTL;
+    }
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    uint16_t mod = get_os_mod();
+
     switch (keycode) {
         case COLON_EQ:
             if (record->event.pressed) {
                 SEND_STRING(":=");
             }
             return false;
+        case OS_COPY:
+            if (record->event.pressed) {
+                register_code(mod);
+                tap_code(KC_C);
+                unregister_code(mod);
+            }
+            return false;
+        case OS_PASTE:
+            if (record->event.pressed) {
+                register_code(mod);
+                tap_code(KC_V);
+                unregister_code(mod);
+            }
+            return false;
+        case OS_CUT:
+            if (record->event.pressed) {
+                register_code(mod);
+                tap_code(KC_X);
+                unregister_code(mod);
+            }
+            return false;
+        case OS_UNDO:
+            if (record->event.pressed) {
+                register_code(mod);
+                tap_code(KC_Z);
+                unregister_code(mod);
+            }
+            return false;
+        case OS_SELALL:
+            if (record->event.pressed) {
+                register_code(mod);
+                tap_code(KC_A);
+                unregister_code(mod);
+            }
+            return false;
     }
     return true;
 }
-//
-// uint16_t get_autoshift_timeout(uint16_t keycode, keyrecord_t *record) {
-//   switch(keycode) {
-//     case KC_Q: case KC_A: case KC_Z:
-//     case KC_SCLN: case KC_O: case KC_SLSH:
-//       return 160;
-//   }
-//
-//   return AUTO_SHIFT_TIMEOUT;
-// }
+
+uint16_t get_autoshift_timeout(uint16_t keycode, keyrecord_t *record) {
+  switch(keycode) {
+    case KC_Q: case KC_A: case KC_Z:
+    case KC_SCLN: case KC_O: case KC_SLSH:
+      return 160;
+  }
+
+  return AUTO_SHIFT_TIMEOUT;
+}
