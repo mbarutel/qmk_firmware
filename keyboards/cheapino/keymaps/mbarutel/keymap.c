@@ -140,10 +140,10 @@ tap_dance_action_t tap_dance_actions[] = {
 
 const uint16_t PROGMEM left_ctrl[] = {KC_S, KC_T, COMBO_END};
 const uint16_t PROGMEM left_alt[] = {KC_R, KC_S, COMBO_END};
-const uint16_t PROGMEM left_gui[] = {KC_C, KC_V, COMBO_END};
+const uint16_t PROGMEM left_gui[] = {KC_T, KC_D, COMBO_END};
 const uint16_t PROGMEM right_ctrl[] = {KC_N, KC_E, COMBO_END};
 const uint16_t PROGMEM right_alt[] = {KC_E, KC_I, COMBO_END};
-const uint16_t PROGMEM right_gui[] = {KC_COMMA, KC_M, COMBO_END};
+const uint16_t PROGMEM right_gui[] = {KC_N, KC_H, COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(left_ctrl, KC_LCTL),
@@ -201,15 +201,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    case SPC_NAV: case BSCP_NUM:
-            return 160;
+    case SPC_NAV:
+            return 180;
   }
   return TAPPING_TERM;
 }
 
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    case SPC_NAV: case BSCP_NUM:
+    case SPC_NAV:
       return false;
   }
   return true;
