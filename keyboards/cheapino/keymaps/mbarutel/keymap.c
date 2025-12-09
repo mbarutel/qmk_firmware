@@ -172,7 +172,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_MOU] = LAYOUT_split_3x5_3(
        RGUI(KC_TAB),RGUI(KC_G),TD(TD_E_LEFT),TD(TD_I_RIGHT),RGUI(KC_SCLN),              _______, _______, _______, _______, _______,
        KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT,LCTL(KC_B),                    _______, MS_LEFT, MS_DOWN, MS_UP,  MS_RGHT,
-       TG(_NUM),LSFT(KC_F2),LSFT(KC_F3),LSFT(KC_F4),_______,                      _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
+       _______,LSFT(KC_F2),LSFT(KC_F3),LSFT(KC_F4),_______,                      _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
                                   _______, _______, _______,    MS_BTN1, MS_BTN2, MS_BTN3
     ),
 
@@ -186,7 +186,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_MED] = LAYOUT_split_3x5_3(
        LSFT(KC_F5),KC_F5,  KC_F9,   KC_F10,  KC_F11,                     SGUI(KC_ENT),SGUI(KC_B),SGUI(KC_R),SGUI(KC_Z),SGUI(KC_X),
        KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT,LCTL(KC_B),                    KC_PSCR, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
-       _______, _______,LCTL(KC_F7),KC_F12,LCTL(KC_F12),                 _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
+       TG(_NUM), _______,LCTL(KC_F7),KC_F12,LCTL(KC_F12),                 _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
                                   _______, _______, _______,    KC_MSTP, KC_MPLY, KC_MUTE
     ),
 
