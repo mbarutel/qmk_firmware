@@ -170,9 +170,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_MOU] = LAYOUT_split_3x5_3(
-       _______,LSFT(KC_F2),LSFT(KC_F3),LSFT(KC_F4),_______,              _______, _______, _______, _______, _______,
+       RGUI(KC_TAB),RGUI(KC_G),TD(TD_E_LEFT),TD(TD_I_RIGHT),RGUI(KC_SCLN),              _______, _______, _______, _______, _______,
        KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT,LCTL(KC_B),                    _______, MS_LEFT, MS_DOWN, MS_UP,  MS_RGHT,
-       _______, _______, _______, _______, _______,                      _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
+       TG(_NUM),LSFT(KC_F2),LSFT(KC_F3),LSFT(KC_F4),_______,                      _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
                                   _______, _______, _______,    MS_BTN1, MS_BTN2, MS_BTN3
     ),
 
@@ -186,7 +186,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_MED] = LAYOUT_split_3x5_3(
        LSFT(KC_F5),KC_F5,  KC_F9,   KC_F10,  KC_F11,                     SGUI(KC_ENT),SGUI(KC_B),SGUI(KC_R),SGUI(KC_Z),SGUI(KC_X),
        KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT,LCTL(KC_B),                    KC_PSCR, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
-       TG(_NUM), _______,LCTL(KC_F7),KC_F12,LCTL(KC_F12),                 _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
+       _______, _______,LCTL(KC_F7),KC_F12,LCTL(KC_F12),                 _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
                                   _______, _______, _______,    KC_MSTP, KC_MPLY, KC_MUTE
     ),
 
@@ -198,7 +198,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_NAV] = LAYOUT_split_3x5_3(
-       RCTL(KC_W),C(S(KC_TAB)),RCTL(KC_F),LCTL(KC_TAB),RCTL(KC_T),       RGUI(KC_TAB),RGUI(KC_G),TD(TD_E_LEFT),TD(TD_I_RIGHT),RGUI(KC_SCLN),
+       RCTL(KC_W),C(S(KC_TAB)),RCTL(KC_F),LCTL(KC_TAB),RCTL(KC_T),       _______, _______, _______, _______, _______,
        KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT,LCTL(KC_B),                    KC_CAPS, KC_LEFT, KC_DOWN, KC_UP,  KC_RIGHT,
        OS_UNDO, OS_CUT,  OS_COPY, OS_PASTE,OS_SELALL,                    _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END,
                                   _______, _______, _______,  RCTL(KC_DEL),RCTL(KC_BSPC), RSFT(KC_TAB)
