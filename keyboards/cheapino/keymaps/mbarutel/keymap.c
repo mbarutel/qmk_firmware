@@ -7,8 +7,6 @@
 #define SPC_NAV  LT(_NAV, KC_SPC)
 #define BSCP_NUM  LT(_NUM, KC_BSPC)
 #define TAB_SYM LT(_SYM, KC_TAB)
-#define ESC_MOU LT(_MOU, KC_ESC)
-#define ENT_MED LT(_MED, KC_ENT)
 #define DEL_FUN LT(_FUN, KC_DEL)
 
 enum cheapino_layers {
@@ -18,7 +16,8 @@ enum cheapino_layers {
     _FUN,
     _MED,
     _NUM,
-    _NAV
+    _NAV,
+    _DBG
 };
 
 enum custom_keycodes {
@@ -34,6 +33,8 @@ enum custom_keycodes {
 enum {
     TD_E_LEFT,    // Tap: RGUI(KC_E), Hold: RGUI(KC_LEFT)
     TD_I_RIGHT,   // Tap: RGUI(KC_I), Hold: RGUI(KC_RIGHT)
+    TD_ESC_DBG,   // Tap: KC_ESC, Hold: MO(_MOU), Double-tap: TG(_DBG)
+    TD_ENT_NUM,   // Tap: KC_ENT, Hold: MO(_MED), Double-tap: TG(_NUM)
 };
 
 // Tap Dance state
@@ -132,10 +133,78 @@ void td_i_right_reset(tap_dance_state_t *state, void *user_data) {
     td_i_right_state.state = 0;
 }
 
+// TD_ESC_DBG tap dance functions
+static tap_state_t td_esc_dbg_state = {
+    .is_press_action = true,
+    .state = 0
+};
+
+void td_esc_dbg_finished(tap_dance_state_t *state, void *user_data) {
+    td_esc_dbg_state.state = dance_step(state);
+    switch (td_esc_dbg_state.state) {
+        case SINGLE_TAP:
+            register_code(KC_ESC);
+            break;
+        case SINGLE_HOLD:
+            layer_on(_MOU);
+            break;
+        case DOUBLE_TAP:
+            layer_invert(_DBG);
+            break;
+    }
+}
+
+void td_esc_dbg_reset(tap_dance_state_t *state, void *user_data) {
+    switch (td_esc_dbg_state.state) {
+        case SINGLE_TAP:
+            unregister_code(KC_ESC);
+            break;
+        case SINGLE_HOLD:
+            layer_off(_MOU);
+            break;
+    }
+    td_esc_dbg_state.state = 0;
+}
+
+// TD_ENT_NUM tap dance functions
+static tap_state_t td_ent_num_state = {
+    .is_press_action = true,
+    .state = 0
+};
+
+void td_ent_num_finished(tap_dance_state_t *state, void *user_data) {
+    td_ent_num_state.state = dance_step(state);
+    switch (td_ent_num_state.state) {
+        case SINGLE_TAP:
+            register_code(KC_ENT);
+            break;
+        case SINGLE_HOLD:
+            layer_on(_MED);
+            break;
+        case DOUBLE_TAP:
+            layer_invert(_NUM);
+            break;
+    }
+}
+
+void td_ent_num_reset(tap_dance_state_t *state, void *user_data) {
+    switch (td_ent_num_state.state) {
+        case SINGLE_TAP:
+            unregister_code(KC_ENT);
+            break;
+        case SINGLE_HOLD:
+            layer_off(_MED);
+            break;
+    }
+    td_ent_num_state.state = 0;
+}
+
 // Tap Dance definitions
 tap_dance_action_t tap_dance_actions[] = {
     [TD_E_LEFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_e_left_finished, td_e_left_reset),
     [TD_I_RIGHT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_i_right_finished, td_i_right_reset),
+    [TD_ESC_DBG] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_esc_dbg_finished, td_esc_dbg_reset),
+    [TD_ENT_NUM] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_ent_num_finished, td_ent_num_reset),
 };
 
 const uint16_t PROGMEM left_ctrl[] = {KC_S, KC_T, COMBO_END};
@@ -159,14 +228,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                          KC_J,    KC_L,    KC_U,    KC_Y,   KC_QUOT,
         KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                          KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
         KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                          KC_K,    KC_M,  KC_COMMA, KC_DOT, KC_SLASH,
-                                  ESC_MOU, SPC_NAV, ENT_MED,    DEL_FUN, BSCP_NUM, TAB_SYM
+                          TD(TD_ESC_DBG), SPC_NAV, TD(TD_ENT_NUM),    DEL_FUN, BSCP_NUM, TAB_SYM
     ),
 
     [_SYM] = LAYOUT_split_3x5_3(
        KC_LBRC, KC_AMPR, KC_ASTR, KC_EQUAL,KC_RBRC,                      _______, _______, _______, _______, _______,
        KC_LPRN, KC_DLR,  KC_PERC, KC_CIRC, KC_RPRN,                      RCTL(KC_B),KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI,
        KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_BSLS,                      _______, _______, _______, _______, _______,
-                                  KC_SCLN,KC_MINUS, COLON_EQ,   _______, _______, _______
+                                  KC_MINUS, KC_SCLN, COLON_EQ,   _______, _______, _______
     ),
 
     [_MOU] = LAYOUT_split_3x5_3(
@@ -184,9 +253,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_MED] = LAYOUT_split_3x5_3(
-       LSFT(KC_F5),KC_F5,  KC_F9,   KC_F10,  KC_F11,                     SGUI(KC_ENT),SGUI(KC_B),SGUI(KC_R),SGUI(KC_Z),SGUI(KC_X),
-       KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT,LCTL(KC_B),                    KC_PSCR, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
-       TG(_NUM), _______,LCTL(KC_F7),KC_F12,LCTL(KC_F12),                 _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
+       _______, RCTL(KC_W), RCTL(KC_F), _______, _______,                     SGUI(KC_ENT),SGUI(KC_B),SGUI(KC_R),SGUI(KC_Z),SGUI(KC_X),
+       OS_SELALL, _______, LCTL(KC_S), LCTL(KC_T), OS_SELALL,                    KC_PSCR, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
+       OS_UNDO, OS_CUT,  OS_COPY, OS_PASTE, LCTL(KC_B),                 _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
                                   _______, _______, _______,    KC_MSTP, KC_MPLY, KC_MUTE
     ),
 
@@ -194,14 +263,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_SLSH, KC_7,    KC_8,    KC_9,    KC_PLUS,                      _______, _______, _______, _______, _______,
        KC_ASTR, KC_4,    KC_5,    KC_6,   KC_MINUS,                      RCTL(KC_B),KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI,
        KC_DOT,  KC_1,    KC_2,    KC_3,   KC_EQUAL,                      _______, _______, _______, _______, _______,
-                                  KC_0,   TG(_NUM), LSFT(KC_ENT),_______, _______, _______
+                                  KC_0,   _______, _______,      _______, _______, _______
     ),
 
     [_NAV] = LAYOUT_split_3x5_3(
-       RCTL(KC_W),C(S(KC_TAB)),RCTL(KC_F),LCTL(KC_TAB),RCTL(KC_T),       _______, _______, _______, _______, _______,
+       _______, _______,_______,C(S(KC_TAB)),LCTL(KC_TAB),       _______, _______, _______, _______, _______,
        KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT,LCTL(KC_B),                    KC_CAPS, KC_LEFT, KC_DOWN, KC_UP,  KC_RIGHT,
-       OS_UNDO, OS_CUT,  OS_COPY, OS_PASTE,OS_SELALL,                    _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END,
+       _______, _______,  _______, _______, _______,                    _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END,
                                   _______, _______, _______,  RCTL(KC_DEL),RCTL(KC_BSPC), RSFT(KC_TAB)
+    ),
+
+    [_DBG] = LAYOUT_split_3x5_3(
+       LSFT(KC_F5),KC_F5,  KC_F9,   KC_F10,  KC_F11,                      _______, _______, _______, _______, _______,
+       LCTL(KC_F7), _______, _______, _______, _______,                      _______, _______, _______, _______, _______,
+       _______, _______, _______,KC_F12,LCTL(KC_F12),                      _______, _______, _______, _______, _______,
+                                  _______, _______, _______,    _______, _______, _______
     ),
 };
 

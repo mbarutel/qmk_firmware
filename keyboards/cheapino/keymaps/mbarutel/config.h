@@ -4,7 +4,7 @@
 #pragma once
 
 #undef TAPPING_TERM
-#define TAPPING_TERM 140
+#define TAPPING_TERM 160
 #define QUICK_TAP_TERM 0
 // #define PERMISSIVE_HOLD
 #define HOLD_ON_OTHER_KEY_PRESS
@@ -15,7 +15,6 @@
 
 
 // Optional: combo config
-#define COMBO_COUNT 7
 #define COMBO_TERM 20
 
 // Auto Shift
