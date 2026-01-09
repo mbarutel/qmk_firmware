@@ -8,6 +8,7 @@
 #define BSCP_NUM  LT(_NUM, KC_BSPC)
 #define TAB_SYM LT(_SYM, KC_TAB)
 #define DEL_FUN LT(_FUN, KC_DEL)
+#define ESC_MOU LT(_MOU, KC_ESC)
 
 enum cheapino_layers {
     _BASE,
@@ -17,7 +18,6 @@ enum cheapino_layers {
     _MED,
     _NUM,
     _NAV,
-    _DBG
 };
 
 enum custom_keycodes {
@@ -133,39 +133,6 @@ void td_i_right_reset(tap_dance_state_t *state, void *user_data) {
     td_i_right_state.state = 0;
 }
 
-// TD_ESC_DBG tap dance functions
-static tap_state_t td_esc_dbg_state = {
-    .is_press_action = true,
-    .state = 0
-};
-
-void td_esc_dbg_finished(tap_dance_state_t *state, void *user_data) {
-    td_esc_dbg_state.state = dance_step(state);
-    switch (td_esc_dbg_state.state) {
-        case SINGLE_TAP:
-            register_code(KC_ESC);
-            break;
-        case SINGLE_HOLD:
-            layer_on(_MOU);
-            break;
-        case DOUBLE_TAP:
-            layer_invert(_DBG);
-            break;
-    }
-}
-
-void td_esc_dbg_reset(tap_dance_state_t *state, void *user_data) {
-    switch (td_esc_dbg_state.state) {
-        case SINGLE_TAP:
-            unregister_code(KC_ESC);
-            break;
-        case SINGLE_HOLD:
-            layer_off(_MOU);
-            break;
-    }
-    td_esc_dbg_state.state = 0;
-}
-
 // TD_ENT_NUM tap dance functions
 static tap_state_t td_ent_num_state = {
     .is_press_action = true,
@@ -203,7 +170,6 @@ void td_ent_num_reset(tap_dance_state_t *state, void *user_data) {
 tap_dance_action_t tap_dance_actions[] = {
     [TD_E_LEFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_e_left_finished, td_e_left_reset),
     [TD_I_RIGHT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_i_right_finished, td_i_right_reset),
-    [TD_ESC_DBG] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_esc_dbg_finished, td_esc_dbg_reset),
     [TD_ENT_NUM] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_ent_num_finished, td_ent_num_reset),
 };
 
@@ -228,7 +194,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                          KC_J,    KC_L,    KC_U,    KC_Y,   KC_QUOT,
         KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                          KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
         KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                          KC_K,    KC_M,  KC_COMMA, KC_DOT, KC_SLASH,
-                          TD(TD_ESC_DBG), SPC_NAV, TD(TD_ENT_NUM),    DEL_FUN, BSCP_NUM, TAB_SYM
+                          ESC_MOU, SPC_NAV, TD(TD_ENT_NUM),    DEL_FUN, BSCP_NUM, TAB_SYM
     ),
 
     [_SYM] = LAYOUT_split_3x5_3(
@@ -253,9 +219,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_MED] = LAYOUT_split_3x5_3(
-       _______, RCTL(KC_W), RCTL(KC_F), KC_F12, LCTL(KC_F12),                     SGUI(KC_ENT),SGUI(KC_B),SGUI(KC_R),SGUI(KC_Z),SGUI(KC_X),
-       OS_SELALL, _______, LCTL(KC_S), LCTL(KC_T), _______,                    KC_PSCR, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
-       OS_UNDO, OS_CUT,  OS_COPY, OS_PASTE, _______,                 _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
+       LSFT(KC_F5), KC_F5,  KC_F9, KC_F10, KC_F11,                     SGUI(KC_ENT),SGUI(KC_B),SGUI(KC_R),SGUI(KC_Z),SGUI(KC_X),
+       LCTL(KC_F7), _______, _______, KC_F12, LCTL(KC_F12),                    KC_PSCR, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
+       OS_UNDO, OS_CUT,  OS_COPY, OS_PASTE, OS_SELALL,                 _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
                                   _______, _______, _______,    KC_MSTP, KC_MPLY, KC_MUTE
     ),
 
@@ -267,17 +233,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_NAV] = LAYOUT_split_3x5_3(
-       _______, _______,_______,C(S(KC_TAB)),LCTL(KC_TAB),       _______, _______, _______, _______, _______,
+       LCTL(KC_W), _______,_______,C(S(KC_TAB)),LCTL(KC_TAB),       _______, _______, _______, _______, _______,
        KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT,LCTL(KC_B),                    KC_CAPS, KC_LEFT, KC_DOWN, KC_UP,  KC_RIGHT,
        _______, _______,  _______, _______, _______,                    _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END,
                                   _______, _______, _______,  RCTL(KC_DEL),RCTL(KC_BSPC), RSFT(KC_TAB)
-    ),
-
-    [_DBG] = LAYOUT_split_3x5_3(
-       LCTL(KC_F7), _______, _______, KC_F12, LCTL(KC_F12),                      _______, _______, _______, _______, _______,
-       LSFT(KC_F5), KC_F5,  KC_F9, KC_F10, KC_F11,                      _______, _______, _______, _______, _______,
-       _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______,
-                                  _______, _______, _______,    _______, _______, _______
     ),
 };
 
