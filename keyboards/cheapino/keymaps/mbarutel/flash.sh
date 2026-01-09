@@ -38,7 +38,7 @@ if [ -n "${SUDO_USER:-}" ]; then
 else
   USER_HOME="${HOME}"
 fi
-BUILD_DIR="${USER_HOME}/qmk_firmware/.build"
+BUILD_DIR="${USER_HOME}/Projects/qmk_firmware/.build"
 
 echo "=== Cleaning old UF2s to avoid conflicts ==="
 rm -f "${BUILD_DIR}"/*.uf2 || true

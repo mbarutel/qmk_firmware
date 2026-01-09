@@ -4,7 +4,7 @@
 #include "quantum.h"
 #include "os_detection.h"
 
-#define SPC_NAV  LT(_NAV, KC_SPC)
+#define ENT_MED  LT(_MED, KC_ENT)
 #define BSCP_NUM  LT(_NUM, KC_BSPC)
 #define TAB_SYM LT(_SYM, KC_TAB)
 #define DEL_FUN LT(_FUN, KC_DEL)
@@ -33,8 +33,7 @@ enum custom_keycodes {
 enum {
     TD_E_LEFT,    // Tap: RGUI(KC_E), Hold: RGUI(KC_LEFT)
     TD_I_RIGHT,   // Tap: RGUI(KC_I), Hold: RGUI(KC_RIGHT)
-    TD_ESC_DBG,   // Tap: KC_ESC, Hold: MO(_MOU), Double-tap: TG(_DBG)
-    TD_ENT_NUM,   // Tap: KC_ENT, Hold: MO(_MED), Double-tap: TG(_NUM)
+    TD_SPC_NAV,   // Tap: KC_SPC, Hold: MO(_NAV), Double-tap: TG(_NUM)
 };
 
 // Tap Dance state
@@ -57,6 +56,19 @@ static uint8_t dance_step(tap_dance_state_t *state) {
     if (state->count == 1) {
         if (state->interrupted || !state->pressed) return SINGLE_TAP;
         else return SINGLE_HOLD;
+    } else if (state->count == 2) {
+        if (state->interrupted) return DOUBLE_SINGLE_TAP;
+        else if (state->pressed) return DOUBLE_HOLD;
+        else return DOUBLE_TAP;
+    }
+    return MORE_TAPS;
+}
+
+// Permissive hold version - triggers hold even when interrupted by another key
+static uint8_t dance_step_permissive(tap_dance_state_t *state) {
+    if (state->count == 1) {
+        if (!state->pressed) return SINGLE_TAP;
+        else return SINGLE_HOLD;  // Hold triggers even if interrupted
     } else if (state->count == 2) {
         if (state->interrupted) return DOUBLE_SINGLE_TAP;
         else if (state->pressed) return DOUBLE_HOLD;
@@ -133,20 +145,20 @@ void td_i_right_reset(tap_dance_state_t *state, void *user_data) {
     td_i_right_state.state = 0;
 }
 
-// TD_ENT_NUM tap dance functions
-static tap_state_t td_ent_num_state = {
+// TD_SPC_NAV tap dance functions
+static tap_state_t td_spc_nav_state = {
     .is_press_action = true,
     .state = 0
 };
 
-void td_ent_num_finished(tap_dance_state_t *state, void *user_data) {
-    td_ent_num_state.state = dance_step(state);
-    switch (td_ent_num_state.state) {
+void td_spc_nav_finished(tap_dance_state_t *state, void *user_data) {
+    td_spc_nav_state.state = dance_step_permissive(state);
+    switch (td_spc_nav_state.state) {
         case SINGLE_TAP:
-            register_code(KC_ENT);
+            register_code(KC_SPC);
             break;
         case SINGLE_HOLD:
-            layer_on(_MED);
+            layer_on(_NAV);
             break;
         case DOUBLE_TAP:
             layer_invert(_NUM);
@@ -154,23 +166,23 @@ void td_ent_num_finished(tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void td_ent_num_reset(tap_dance_state_t *state, void *user_data) {
-    switch (td_ent_num_state.state) {
+void td_spc_nav_reset(tap_dance_state_t *state, void *user_data) {
+    switch (td_spc_nav_state.state) {
         case SINGLE_TAP:
-            unregister_code(KC_ENT);
+            unregister_code(KC_SPC);
             break;
         case SINGLE_HOLD:
-            layer_off(_MED);
+            layer_off(_NAV);
             break;
     }
-    td_ent_num_state.state = 0;
+    td_spc_nav_state.state = 0;
 }
 
 // Tap Dance definitions
 tap_dance_action_t tap_dance_actions[] = {
     [TD_E_LEFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_e_left_finished, td_e_left_reset),
     [TD_I_RIGHT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_i_right_finished, td_i_right_reset),
-    [TD_ENT_NUM] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_ent_num_finished, td_ent_num_reset),
+    [TD_SPC_NAV] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_spc_nav_finished, td_spc_nav_reset),
 };
 
 const uint16_t PROGMEM left_ctrl[] = {KC_S, KC_T, COMBO_END};
@@ -194,7 +206,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                          KC_J,    KC_L,    KC_U,    KC_Y,   KC_QUOT,
         KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                          KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
         KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                          KC_K,    KC_M,  KC_COMMA, KC_DOT, KC_SLASH,
-                          ESC_MOU, SPC_NAV, TD(TD_ENT_NUM),    DEL_FUN, BSCP_NUM, TAB_SYM
+                          ESC_MOU, TD(TD_SPC_NAV), ENT_MED,    DEL_FUN, BSCP_NUM, TAB_SYM
     ),
 
     [_SYM] = LAYOUT_split_3x5_3(
@@ -229,7 +241,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_SLSH, KC_7,    KC_8,    KC_9,    KC_PLUS,                      _______, _______, _______, _______, _______,
        KC_ASTR, KC_4,    KC_5,    KC_6,   KC_MINUS,                      RCTL(KC_B),KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI,
        KC_DOT,  KC_1,    KC_2,    KC_3,   KC_EQUAL,                      _______, _______, _______, _______, _______,
-                                  KC_0,   _______, _______,      _______, _______, _______
+                                  KC_0,   _______, LSFT(KC_ENT),      _______, _______, _______
     ),
 
     [_NAV] = LAYOUT_split_3x5_3(
@@ -242,18 +254,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    case SPC_NAV:
+    case TD(TD_SPC_NAV):
             return 200;
   }
   return TAPPING_TERM;
-}
-
-bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-    case SPC_NAV:
-      return false;
-  }
-  return true;
 }
 
 // Helper to get the correct modifier for the detected OS
