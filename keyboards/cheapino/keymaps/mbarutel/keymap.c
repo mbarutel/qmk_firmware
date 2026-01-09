@@ -253,9 +253,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_MED] = LAYOUT_split_3x5_3(
-       _______, RCTL(KC_W), RCTL(KC_F), _______, _______,                     SGUI(KC_ENT),SGUI(KC_B),SGUI(KC_R),SGUI(KC_Z),SGUI(KC_X),
-       OS_SELALL, _______, LCTL(KC_S), LCTL(KC_T), OS_SELALL,                    KC_PSCR, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
-       OS_UNDO, OS_CUT,  OS_COPY, OS_PASTE, LCTL(KC_B),                 _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
+       _______, RCTL(KC_W), RCTL(KC_F), KC_F12, LCTL(KC_F12),                     SGUI(KC_ENT),SGUI(KC_B),SGUI(KC_R),SGUI(KC_Z),SGUI(KC_X),
+       OS_SELALL, _______, LCTL(KC_S), LCTL(KC_T), _______,                    KC_PSCR, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
+       OS_UNDO, OS_CUT,  OS_COPY, OS_PASTE, _______,                 _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
                                   _______, _______, _______,    KC_MSTP, KC_MPLY, KC_MUTE
     ),
 
@@ -274,9 +274,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_DBG] = LAYOUT_split_3x5_3(
-       LSFT(KC_F5),KC_F5,  KC_F9,   KC_F10,  KC_F11,                      _______, _______, _______, _______, _______,
-       LCTL(KC_F7), _______, _______, _______, _______,                      _______, _______, _______, _______, _______,
-       _______, _______, _______,KC_F12,LCTL(KC_F12),                      _______, _______, _______, _______, _______,
+       LCTL(KC_F7), _______, _______, KC_F12, LCTL(KC_F12),                      _______, _______, _______, _______, _______,
+       LSFT(KC_F5), KC_F5,  KC_F9, KC_F10, KC_F11,                      _______, _______, _______, _______, _______,
+       _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______,
                                   _______, _______, _______,    _______, _______, _______
     ),
 };
