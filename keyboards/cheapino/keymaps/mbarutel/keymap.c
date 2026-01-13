@@ -205,7 +205,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT_split_3x5_3(
         KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                          KC_J,    KC_L,    KC_U,    KC_Y,   KC_QUOT,
         KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                          KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
-        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                          KC_K,    KC_M,  KC_COMMA, KC_DOT, KC_SLASH,
+        LSFT_T(KC_Z), KC_X, KC_C, KC_V, KC_B,                          KC_K,    KC_M,  KC_COMMA, KC_DOT, RSFT_T(KC_SLSH),
                           ESC_MOU, TD(TD_SPC_NAV), ENT_MED,    DEL_FUN, BSCP_NUM, TAB_SYM
     ),
 
@@ -319,12 +319,3 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-uint16_t get_autoshift_timeout(uint16_t keycode, keyrecord_t *record) {
-  switch(keycode) {
-    case KC_Q: case KC_A: case KC_Z:
-    case KC_SCLN: case KC_O: case KC_SLSH:
-      return 160;
-  }
-
-  return AUTO_SHIFT_TIMEOUT;
-}
