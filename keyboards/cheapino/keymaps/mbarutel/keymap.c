@@ -233,7 +233,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_MED] = LAYOUT_split_3x5_3(
        LSFT(KC_F5), KC_F5,  KC_F9, KC_F10, KC_F11,                     SGUI(KC_ENT),SGUI(KC_B),SGUI(KC_R),SGUI(KC_Z),SGUI(KC_X),
        LCTL(KC_F7), LCTL(KC_F), LCTL(KC_S), KC_F12, LCTL(KC_F12),                    _______, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
-       OS_UNDO, OS_CUT,  OS_COPY, OS_PASTE, OS_SELALL,                 _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
+       LCTL(KC_GRV), _______,  _______, _______, LCTL(KC_SLASH),                 _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
                                   _______, _______, _______,    KC_MSTP, KC_MPLY, KC_MUTE
     ),
 
@@ -247,7 +247,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_NAV] = LAYOUT_split_3x5_3(
        LCTL(KC_W), _______, LCTL(KC_T), C(S(KC_TAB)),LCTL(KC_TAB),       KC_PSCR, _______, _______, _______, _______,
        KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT,LCTL(KC_B),                    KC_CAPS, KC_LEFT, KC_DOWN, KC_UP,  KC_RIGHT,
-       LCTL(KC_GRV), _______,  _______, _______, LCTL(KC_SLASH),                    _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END,
+       OS_UNDO, OS_CUT,  OS_COPY, OS_PASTE, OS_SELALL,                    _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END,
                                   _______, _______, _______,  RCTL(KC_DEL),RCTL(KC_BSPC), RSFT(KC_TAB)
     ),
 };
