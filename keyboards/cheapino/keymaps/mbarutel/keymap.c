@@ -185,22 +185,6 @@ tap_dance_action_t tap_dance_actions[] = {
     [TD_SPC_NAV] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_spc_nav_finished, td_spc_nav_reset),
 };
 
-const uint16_t PROGMEM left_ctrl[] = {KC_S, KC_T, COMBO_END};
-const uint16_t PROGMEM left_alt[] = {KC_R, KC_S, COMBO_END};
-const uint16_t PROGMEM left_gui[] = {KC_T, KC_D, COMBO_END};
-const uint16_t PROGMEM right_ctrl[] = {KC_N, KC_E, COMBO_END};
-const uint16_t PROGMEM right_alt[] = {KC_E, KC_I, COMBO_END};
-const uint16_t PROGMEM right_gui[] = {KC_N, KC_H, COMBO_END};
-
-combo_t key_combos[] = {
-    COMBO(left_ctrl, KC_LCTL),
-    COMBO(left_alt, KC_LALT),
-    COMBO(left_gui, KC_LGUI),
-    COMBO(right_ctrl, KC_RCTL),
-    COMBO(right_alt, KC_RALT),
-    COMBO(right_gui, KC_RGUI),
-};
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT_split_3x5_3(
         KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                          KC_J,    KC_L,    KC_U,    KC_Y,   KC_QUOT,
@@ -251,14 +235,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                   _______, _______, _______,  RCTL(KC_DEL),RCTL(KC_BSPC), RSFT(KC_TAB)
     ),
 };
-
-uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-    case TD(TD_SPC_NAV):
-            return 200;
-  }
-  return TAPPING_TERM;
-}
 
 // Helper to get the correct modifier for the detected OS
 static uint16_t get_os_mod(void) {
