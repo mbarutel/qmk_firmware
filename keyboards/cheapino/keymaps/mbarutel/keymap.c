@@ -9,6 +9,7 @@
 #define TAB_SYM LT(_SYM, KC_TAB)
 #define DEL_FUN LT(_FUN, KC_DEL)
 #define ESC_MOU LT(_MOU, KC_ESC)
+#define SPC_NAV LT(_NAV, KC_SPC)
 
 enum cheapino_layers {
     _BASE,
@@ -21,8 +22,7 @@ enum cheapino_layers {
 };
 
 enum custom_keycodes {
-    COLON_EQ = SAFE_RANGE,
-    OS_COPY,
+    OS_COPY = SAFE_RANGE,
     OS_PASTE,
     OS_CUT,
     OS_UNDO,
@@ -56,19 +56,6 @@ static uint8_t dance_step(tap_dance_state_t *state) {
     if (state->count == 1) {
         if (state->interrupted || !state->pressed) return SINGLE_TAP;
         else return SINGLE_HOLD;
-    } else if (state->count == 2) {
-        if (state->interrupted) return DOUBLE_SINGLE_TAP;
-        else if (state->pressed) return DOUBLE_HOLD;
-        else return DOUBLE_TAP;
-    }
-    return MORE_TAPS;
-}
-
-// Permissive hold version - triggers hold even when interrupted by another key
-static uint8_t dance_step_permissive(tap_dance_state_t *state) {
-    if (state->count == 1) {
-        if (!state->pressed) return SINGLE_TAP;
-        else return SINGLE_HOLD;  // Hold triggers even if interrupted
     } else if (state->count == 2) {
         if (state->interrupted) return DOUBLE_SINGLE_TAP;
         else if (state->pressed) return DOUBLE_HOLD;
@@ -145,44 +132,10 @@ void td_i_right_reset(tap_dance_state_t *state, void *user_data) {
     td_i_right_state.state = 0;
 }
 
-// TD_SPC_NAV tap dance functions
-static tap_state_t td_spc_nav_state = {
-    .is_press_action = true,
-    .state = 0
-};
-
-void td_spc_nav_finished(tap_dance_state_t *state, void *user_data) {
-    td_spc_nav_state.state = dance_step_permissive(state);
-    switch (td_spc_nav_state.state) {
-        case SINGLE_TAP:
-            register_code(KC_SPC);
-            break;
-        case SINGLE_HOLD:
-            layer_on(_NAV);
-            break;
-        case DOUBLE_TAP:
-            layer_invert(_NUM);
-            break;
-    }
-}
-
-void td_spc_nav_reset(tap_dance_state_t *state, void *user_data) {
-    switch (td_spc_nav_state.state) {
-        case SINGLE_TAP:
-            unregister_code(KC_SPC);
-            break;
-        case SINGLE_HOLD:
-            layer_off(_NAV);
-            break;
-    }
-    td_spc_nav_state.state = 0;
-}
-
 // Tap Dance definitions
 tap_dance_action_t tap_dance_actions[] = {
     [TD_E_LEFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_e_left_finished, td_e_left_reset),
     [TD_I_RIGHT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_i_right_finished, td_i_right_reset),
-    [TD_SPC_NAV] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_spc_nav_finished, td_spc_nav_reset),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -190,14 +143,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                          KC_J,    KC_L,    KC_U,    KC_Y,   KC_QUOT,
         KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                          KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
         KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                          KC_K,    KC_M,  KC_COMMA, KC_DOT, KC_SLASH,
-                          ESC_MOU, TD(TD_SPC_NAV), ENT_MED,    DEL_FUN, BSCP_NUM, TAB_SYM
+                          ESC_MOU, SPC_NAV, ENT_MED,    DEL_FUN, BSCP_NUM, TAB_SYM
     ),
 
     [_SYM] = LAYOUT_split_3x5_3(
        KC_LBRC, KC_AMPR, KC_ASTR, KC_EQUAL,KC_RBRC,                      _______, _______, _______, _______, _______,
        KC_LPRN, KC_DLR,  KC_PERC, KC_CIRC, KC_RPRN,                      RCTL(KC_B),KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI,
        KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_BSLS,                      _______, _______, _______, _______, _______,
-                                  KC_SCLN, KC_MINUS, COLON_EQ,   _______, _______, _______
+                                  KC_SCLN, _______, KC_MINUS,   _______, _______, _______
     ),
 
     [_MOU] = LAYOUT_split_3x5_3(
@@ -251,11 +204,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     uint16_t mod = get_os_mod();
 
     switch (keycode) {
-        case COLON_EQ:
-            if (record->event.pressed) {
-                SEND_STRING(":=");
-            }
-            return false;
         case OS_COPY:
             if (record->event.pressed) {
                 register_code(mod);
