@@ -132,6 +132,40 @@ void td_i_right_reset(tap_dance_state_t *state, void *user_data) {
     td_i_right_state.state = 0;
 }
 
+// Combo definitions
+enum combos {
+    COMBO_ZX_LGUI,
+    COMBO_DOTSLSH_RGUI,
+    COMBO_XC_LALT,
+    COMBO_COMMDOT_RALT,
+    COMBO_CV_LCTL,
+    COMBO_COMMM_RCTL,
+    COMBO_VB_LSFT,
+    COMBO_MK_RSFT,
+    COMBO_LENGTH
+};
+uint16_t COMBO_LEN = COMBO_LENGTH;
+
+const uint16_t PROGMEM zx_combo[]       = {KC_Z,    KC_X,     COMBO_END};
+const uint16_t PROGMEM dotslsh_combo[]  = {KC_DOT,  KC_SLSH,  COMBO_END};
+const uint16_t PROGMEM xc_combo[]       = {KC_X,    KC_C,     COMBO_END};
+const uint16_t PROGMEM commdot_combo[]  = {KC_COMM, KC_DOT,   COMBO_END};
+const uint16_t PROGMEM cv_combo[]       = {KC_C,    KC_V,     COMBO_END};
+const uint16_t PROGMEM commm_combo[]    = {KC_COMM, KC_M,     COMBO_END};
+const uint16_t PROGMEM vb_combo[]       = {KC_V,    KC_B,     COMBO_END};
+const uint16_t PROGMEM mk_combo[]       = {KC_M,    KC_K,     COMBO_END};
+
+combo_t key_combos[] = {
+    [COMBO_ZX_LGUI]     = COMBO(zx_combo,      KC_LGUI),
+    [COMBO_DOTSLSH_RGUI]= COMBO(dotslsh_combo,  KC_RGUI),
+    [COMBO_XC_LALT]     = COMBO(xc_combo,       KC_LALT),
+    [COMBO_COMMDOT_RALT]= COMBO(commdot_combo,  KC_RALT),
+    [COMBO_CV_LCTL]     = COMBO(cv_combo,       KC_LCTL),
+    [COMBO_COMMM_RCTL]  = COMBO(commm_combo,    KC_RCTL),
+    [COMBO_VB_LSFT]     = COMBO(vb_combo,       KC_LSFT),
+    [COMBO_MK_RSFT]     = COMBO(mk_combo,       KC_RSFT),
+};
+
 // Tap Dance definitions
 tap_dance_action_t tap_dance_actions[] = {
     [TD_E_LEFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_e_left_finished, td_e_left_reset),
@@ -241,6 +275,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
     }
     return true;
+}
+
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case SPC_NAV:
+            return 200;
+        default:
+            return TAPPING_TERM;
+    }
+}
+
+bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case SPC_NAV:
+            return false;
+        default:
+            return true;
+    }
 }
 
 uint16_t get_autoshift_timeout(uint16_t keycode, keyrecord_t *record) {

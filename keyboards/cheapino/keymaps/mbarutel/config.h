@@ -9,17 +9,18 @@
 // #define PERMISSIVE_HOLD
 #define HOLD_ON_OTHER_KEY_PRESS
 #define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
+#define TAPPING_TERM_PER_KEY
 // #define IGNORE_MOD_TAP_INTERRUPT
 // #define TAPPING_FORCE_HOLD
 // #define RETRO_TAPPING
 
 
 // Optional: combo config
-#define COMBO_TERM 20
+#define COMBO_TERM 50
 
 // Auto Shift
 // #define NO_AUTO_SHIFT_ALPHA
-#define AUTO_SHIFT_TIMEOUT 130
+#define AUTO_SHIFT_TIMEOUT 120
 #define NO_AUTO_SHIFT_NUMERIC
 #define AUTO_SHIFT_TIMEOUT_PER_KEY
 // #define AUTO_SHIFT_NO_SETUP
