@@ -277,6 +277,9 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case SPC_NAV:
             return 200;
+        case V_LSFT:
+        case M_RSFT:
+            return 160;
         default:
             return TAPPING_TERM;
     }
@@ -285,6 +288,8 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case SPC_NAV:
+        case V_LSFT:
+        case M_RSFT:
             return false;
         default:
             return true;
