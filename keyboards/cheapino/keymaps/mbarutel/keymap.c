@@ -6,12 +6,12 @@
 
 #define ENT_MED  LT(_MED, KC_ENT)
 #define BSCP_NUM  LT(_NUM, KC_BSPC)
-#define TAB_SYM LT(_SYM, KC_TAB)
-#define DEL_FUN LT(_FUN, KC_DEL)
-#define ESC_MOU LT(_MOU, KC_ESC)
-#define SPC_NAV LT(_NAV, KC_SPC)
-#define Z_LSFT  MT(MOD_LSFT, KC_Z)
-#define SLSH_RSFT MT(MOD_RSFT, KC_SLSH)
+#define TAB_SHFT MT(MOD_RSFT, KC_TAB)
+#define DEL_SYM  LT(_SYM, KC_DEL)
+#define ESC_MOU  LT(_MOU, KC_ESC)
+#define SPC_NAV  LT(_NAV, KC_SPC)
+#define Z_LSFT   MT(MOD_LSFT, KC_Z)
+#define SLSH_FUN LT(_FUN, KC_SLSH)
 
 enum cheapino_layers {
     _BASE,
@@ -172,8 +172,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT_split_3x5_3(
         KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                          KC_J,    KC_L,    KC_U,    KC_Y,   KC_QUOT,
         KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                          KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
-        Z_LSFT,  KC_X,    KC_C,    KC_V,    KC_B,                          KC_K,    KC_M,  KC_COMMA, KC_DOT, SLSH_RSFT,
-                          ESC_MOU, SPC_NAV, ENT_MED,    DEL_FUN, BSCP_NUM, TAB_SYM
+        Z_LSFT,  KC_X,    KC_C,    KC_V,    KC_B,                          KC_K,    KC_M,  KC_COMMA, KC_DOT, SLSH_FUN,
+                          ESC_MOU, SPC_NAV, ENT_MED,    DEL_SYM, BSCP_NUM, TAB_SHFT
     ),
 
     [_SYM] = LAYOUT_split_3x5_3(
@@ -273,25 +273,27 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-// uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-//     switch (keycode) {
-//         case SPC_NAV:
-//             return 200;
-//         default:
-//             return TAPPING_TERM;
-//     }
-// }
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case SPC_NAV:
+        case Z_LSFT:
+        case TAB_SHFT:
+            return 200;
+        default:
+            return TAPPING_TERM;
+    }
+}
 
-// bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
-//     switch (keycode) {
-//         case SPC_NAV:
-//         case Z_LSFT:
-//         case SLSH_RSFT:
-//             return false;
-//         default:
-//             return true;
-//     }
-// }
+bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case SPC_NAV:
+        case Z_LSFT:
+        case TAB_SHFT:
+            return false;
+        default:
+            return true;
+    }
+}
 
 // uint16_t get_autoshift_timeout(uint16_t keycode, keyrecord_t *record) {
 //   switch(keycode) {
