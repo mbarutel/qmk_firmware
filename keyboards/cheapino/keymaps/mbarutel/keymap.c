@@ -10,6 +10,8 @@
 #define DEL_FUN LT(_FUN, KC_DEL)
 #define ESC_MOU LT(_MOU, KC_ESC)
 #define SPC_NAV LT(_NAV, KC_SPC)
+#define Z_LSFT  MT(MOD_LSFT, KC_Z)
+#define SLSH_RSFT MT(MOD_RSFT, KC_SLSH)
 
 enum cheapino_layers {
     _BASE,
@@ -134,36 +136,30 @@ void td_i_right_reset(tap_dance_state_t *state, void *user_data) {
 
 // Combo definitions
 enum combos {
-    COMBO_ZX_LGUI,
-    COMBO_DOTSLSH_RGUI,
+    COMBO_VB_LGUI,
+    COMBO_KM_RGUI,
     COMBO_XC_LALT,
     COMBO_COMMDOT_RALT,
     COMBO_CV_LCTL,
     COMBO_COMMM_RCTL,
-    COMBO_VB_LSFT,
-    COMBO_MK_RSFT,
     COMBO_LENGTH
 };
 uint16_t COMBO_LEN = COMBO_LENGTH;
 
-const uint16_t PROGMEM zx_combo[]       = {KC_Z,    KC_X,     COMBO_END};
-const uint16_t PROGMEM dotslsh_combo[]  = {KC_DOT,  KC_SLSH,  COMBO_END};
+const uint16_t PROGMEM vb_combo[]       = {KC_V,    KC_B,     COMBO_END};
+const uint16_t PROGMEM km_combo[]       = {KC_K,    KC_M,     COMBO_END};
 const uint16_t PROGMEM xc_combo[]       = {KC_X,    KC_C,     COMBO_END};
 const uint16_t PROGMEM commdot_combo[]  = {KC_COMM, KC_DOT,   COMBO_END};
 const uint16_t PROGMEM cv_combo[]       = {KC_C,    KC_V,     COMBO_END};
 const uint16_t PROGMEM commm_combo[]    = {KC_COMM, KC_M,     COMBO_END};
-const uint16_t PROGMEM vb_combo[]       = {KC_V,    KC_B,     COMBO_END};
-const uint16_t PROGMEM mk_combo[]       = {KC_M,    KC_K,     COMBO_END};
 
 combo_t key_combos[] = {
-    [COMBO_ZX_LGUI]     = COMBO(zx_combo,      KC_LGUI),
-    [COMBO_DOTSLSH_RGUI]= COMBO(dotslsh_combo,  KC_RGUI),
-    [COMBO_XC_LALT]     = COMBO(xc_combo,       KC_LALT),
-    [COMBO_COMMDOT_RALT]= COMBO(commdot_combo,  KC_RALT),
-    [COMBO_CV_LCTL]     = COMBO(cv_combo,       KC_LCTL),
-    [COMBO_COMMM_RCTL]  = COMBO(commm_combo,    KC_RCTL),
-    [COMBO_VB_LSFT]     = COMBO(vb_combo,       KC_LSFT),
-    [COMBO_MK_RSFT]     = COMBO(mk_combo,       KC_RSFT),
+    [COMBO_VB_LGUI]     = COMBO(vb_combo,       KC_LGUI),
+    [COMBO_KM_RGUI]     = COMBO(km_combo,        KC_RGUI),
+    [COMBO_XC_LALT]     = COMBO(xc_combo,        KC_LALT),
+    [COMBO_COMMDOT_RALT]= COMBO(commdot_combo,   KC_RALT),
+    [COMBO_CV_LCTL]     = COMBO(cv_combo,        KC_LCTL),
+    [COMBO_COMMM_RCTL]  = COMBO(commm_combo,     KC_RCTL),
 };
 
 // Tap Dance definitions
@@ -176,7 +172,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT_split_3x5_3(
         KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                          KC_J,    KC_L,    KC_U,    KC_Y,   KC_QUOT,
         KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                          KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
-        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                          KC_K,    KC_M,  KC_COMMA, KC_DOT, KC_SLASH,
+        Z_LSFT,  KC_X,    KC_C,    KC_V,    KC_B,                          KC_K,    KC_M,  KC_COMMA, KC_DOT, SLSH_RSFT,
                           ESC_MOU, SPC_NAV, ENT_MED,    DEL_FUN, BSCP_NUM, TAB_SYM
     ),
 
@@ -277,30 +273,32 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case SPC_NAV:
-            return 200;
-        default:
-            return TAPPING_TERM;
-    }
-}
+// uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+//     switch (keycode) {
+//         case SPC_NAV:
+//             return 200;
+//         default:
+//             return TAPPING_TERM;
+//     }
+// }
 
-bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case SPC_NAV:
-            return false;
-        default:
-            return true;
-    }
-}
+// bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
+//     switch (keycode) {
+//         case SPC_NAV:
+//         case Z_LSFT:
+//         case SLSH_RSFT:
+//             return false;
+//         default:
+//             return true;
+//     }
+// }
 
-uint16_t get_autoshift_timeout(uint16_t keycode, keyrecord_t *record) {
-  switch(keycode) {
-    case KC_Q: case KC_A: case KC_Z:
-    case KC_SCLN: case KC_O: case KC_SLSH:
-      return 160;
-  }
+// uint16_t get_autoshift_timeout(uint16_t keycode, keyrecord_t *record) {
+//   switch(keycode) {
+//     case KC_Q: case KC_A: case KC_Z:
+//     case KC_SCLN: case KC_O: case KC_SLSH:
+//       return 160;
+//   }
 
-  return AUTO_SHIFT_TIMEOUT;
-}
+//   return AUTO_SHIFT_TIMEOUT;
+// }
