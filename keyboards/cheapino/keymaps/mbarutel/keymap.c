@@ -273,32 +273,32 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case SPC_NAV:
-            return 200;
-        default:
-            return TAPPING_TERM;
-    }
-}
+// uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+//     switch (keycode) {
+//         case SPC_NAV:
+//             return 200;
+//         default:
+//             return TAPPING_TERM;
+//     }
+// }
 
-bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case SPC_NAV:
-        case Z_LSFT:
-        case SLSH_RSFT:
-            return false;
-        default:
-            return true;
-    }
-}
+// bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
+//     switch (keycode) {
+//         case SPC_NAV:
+//         case Z_LSFT:
+//         case SLSH_RSFT:
+//             return false;
+//         default:
+//             return true;
+//     }
+// }
 
-uint16_t get_autoshift_timeout(uint16_t keycode, keyrecord_t *record) {
-  switch(keycode) {
-    case KC_Q: case KC_A: case KC_Z:
-    case KC_SCLN: case KC_O: case KC_SLSH:
-      return 160;
-  }
+// uint16_t get_autoshift_timeout(uint16_t keycode, keyrecord_t *record) {
+//   switch(keycode) {
+//     case KC_Q: case KC_A: case KC_Z:
+//     case KC_SCLN: case KC_O: case KC_SLSH:
+//       return 160;
+//   }
 
-  return AUTO_SHIFT_TIMEOUT;
-}
+//   return AUTO_SHIFT_TIMEOUT;
+// }
