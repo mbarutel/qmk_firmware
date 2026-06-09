@@ -36,6 +36,8 @@ enum {
     TD_E_LEFT,    // Tap: RGUI(KC_E), Hold: RGUI(KC_LEFT)
     TD_I_RIGHT,   // Tap: RGUI(KC_I), Hold: RGUI(KC_RIGHT)
     TD_SPC_NAV,   // Tap: KC_SPC, Hold: MO(_NAV), Double-tap: TG(_NUM)
+    TD_A_SCLN,    // Tap: KC_A,       Hold: KC_SCLN
+    TD_O_MINS,    // Tap: KC_O,       Hold: KC_MINS
 };
 
 // Tap Dance state
@@ -134,6 +136,50 @@ void td_i_right_reset(tap_dance_state_t *state, void *user_data) {
     td_i_right_state.state = 0;
 }
 
+// TD_A_SCLN tap dance functions
+static tap_state_t td_a_scln_state = {
+    .is_press_action = true,
+    .state = 0
+};
+
+void td_a_scln_finished(tap_dance_state_t *state, void *user_data) {
+    td_a_scln_state.state = dance_step(state);
+    switch (td_a_scln_state.state) {
+        case SINGLE_TAP:   register_code(KC_A);    break;
+        case SINGLE_HOLD:  register_code(KC_SCLN); break;
+    }
+}
+
+void td_a_scln_reset(tap_dance_state_t *state, void *user_data) {
+    switch (td_a_scln_state.state) {
+        case SINGLE_TAP:   unregister_code(KC_A);    break;
+        case SINGLE_HOLD:  unregister_code(KC_SCLN); break;
+    }
+    td_a_scln_state.state = 0;
+}
+
+// TD_O_MINS tap dance functions
+static tap_state_t td_o_mins_state = {
+    .is_press_action = true,
+    .state = 0
+};
+
+void td_o_mins_finished(tap_dance_state_t *state, void *user_data) {
+    td_o_mins_state.state = dance_step(state);
+    switch (td_o_mins_state.state) {
+        case SINGLE_TAP:   register_code(KC_O);    break;
+        case SINGLE_HOLD:  register_code(KC_MINS); break;
+    }
+}
+
+void td_o_mins_reset(tap_dance_state_t *state, void *user_data) {
+    switch (td_o_mins_state.state) {
+        case SINGLE_TAP:   unregister_code(KC_O);    break;
+        case SINGLE_HOLD:  unregister_code(KC_MINS); break;
+    }
+    td_o_mins_state.state = 0;
+}
+
 // Combo definitions
 enum combos {
     COMBO_VB_LGUI,
@@ -164,14 +210,16 @@ combo_t key_combos[] = {
 
 // Tap Dance definitions
 tap_dance_action_t tap_dance_actions[] = {
-    [TD_E_LEFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_e_left_finished, td_e_left_reset),
+    [TD_E_LEFT]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_e_left_finished,  td_e_left_reset),
     [TD_I_RIGHT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_i_right_finished, td_i_right_reset),
+    [TD_A_SCLN]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_a_scln_finished,  td_a_scln_reset),
+    [TD_O_MINS]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_o_mins_finished,  td_o_mins_reset),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT_split_3x5_3(
         KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                          KC_J,    KC_L,    KC_U,    KC_Y,   KC_QUOT,
-        KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                          KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
+        TD(TD_A_SCLN),KC_R,  KC_S,    KC_T,    KC_D,                          KC_H,    KC_N,    KC_E,    KC_I,  TD(TD_O_MINS),
         Z_MED,   KC_X,    KC_C,    KC_V,    KC_B,                          KC_K,    KC_M,  KC_COMMA, KC_DOT, SLSH_FUN,
                           ESC_LSFT,SPC_NAV, ENT_MOU,    DEL_NUM, BSCP_SYM, TAB_SHFT
     ),
@@ -278,6 +326,11 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
         case Z_MED:
         case SLSH_FUN:
             return 200;
+        case TD(TD_A_SCLN):
+        case TD(TD_O_MINS):
+        case TD(TD_E_LEFT):
+        case TD(TD_I_RIGHT):
+            return 180;
         default:
             return TAPPING_TERM;
     }
