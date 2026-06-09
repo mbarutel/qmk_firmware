@@ -5,9 +5,9 @@
 #include "os_detection.h"
 
 #define ENT_MOU  LT(_MOU, KC_ENT)
-#define BSCP_NUM LT(_NUM, KC_BSPC)
+#define BSCP_SYM LT(_SYM, KC_BSPC)
 #define TAB_SHFT MT(MOD_RSFT, KC_TAB)
-#define DEL_SYM  LT(_SYM, KC_DEL)
+#define DEL_NUM  LT(_NUM, KC_DEL)
 #define ESC_LSFT MT(MOD_LSFT, KC_ESC)
 #define SPC_NAV  LT(_NAV, KC_SPC)
 #define Z_MED    LT(_MED, KC_Z)
@@ -173,7 +173,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                          KC_J,    KC_L,    KC_U,    KC_Y,   KC_QUOT,
         KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                          KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
         Z_MED,   KC_X,    KC_C,    KC_V,    KC_B,                          KC_K,    KC_M,  KC_COMMA, KC_DOT, SLSH_FUN,
-                          ESC_LSFT,SPC_NAV, ENT_MOU,    DEL_SYM, BSCP_NUM, TAB_SHFT
+                          ESC_LSFT,SPC_NAV, ENT_MOU,    DEL_NUM, BSCP_SYM, TAB_SHFT
     ),
 
     [_SYM] = LAYOUT_split_3x5_3(
@@ -192,15 +192,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_FUN] = LAYOUT_split_3x5_3(
        KC_F12,  KC_F7,   KC_F8,   KC_F9,   QK_BOOT,                      _______, _______, _______, _______, _______,
-       KC_F11,  KC_F4,   KC_F5,   KC_F6,   _______,                      RCTL(KC_B),KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI,
+       KC_F11,  KC_F4,   KC_F5,   KC_F6,   _______,                      KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI, _______,
        KC_F10,  KC_F1,   KC_F2,   KC_F3,   _______,                      _______, _______, _______, _______, _______,
                                   _______, _______, _______,    _______, _______, _______
     ),
 
     [_MED] = LAYOUT_split_3x5_3(
-       LSFT(KC_F5), KC_F5,  KC_F9, KC_F10, KC_F11,                     SGUI(KC_ENT),SGUI(KC_B),SGUI(KC_R),SGUI(KC_Z),SGUI(KC_X),
-       LCTL(KC_F7), LCTL(KC_F), LCTL(KC_S), KC_F12, LCTL(KC_F12),                    _______, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
-       LCTL(KC_GRV), _______,  _______, _______, LCTL(KC_SLASH),                 _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
+       _______, _______,  _______, _______, _______,                     SGUI(KC_ENT),SGUI(KC_B),SGUI(KC_R),SGUI(KC_Z),SGUI(KC_X),
+       _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT,                    _______, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
+       _______, _______,  _______, _______, _______,                 _______, _______,  _______, _______, _______,
                                   _______, _______, _______,    KC_MSTP, KC_MPLY, KC_MUTE
     ),
 
