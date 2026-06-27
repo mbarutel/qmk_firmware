@@ -212,13 +212,11 @@ combo_t key_combos[] = {
 tap_dance_action_t tap_dance_actions[] = {
     [TD_E_LEFT]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_e_left_finished,  td_e_left_reset),
     [TD_I_RIGHT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_i_right_finished, td_i_right_reset),
-    [TD_F_SCLN]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_f_scln_finished,  td_f_scln_reset),
-    [TD_U_MINS]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_u_mins_finished,  td_u_mins_reset),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT_split_3x5_3(
-        KC_Q,    KC_W,  TD(TD_F_SCLN), KC_P,  KC_G,                          KC_J,    KC_L,  TD(TD_U_MINS), KC_Y, KC_QUOT,
+        KC_Q,    KC_W,    KC_F, KC_P,  KC_G,                          KC_J,    KC_L,  KC_U, KC_Y, KC_QUOT,
         KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                          KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
         Z_MED,   KC_X,    KC_C,    KC_V,    KC_B,                          KC_K,    KC_M,  KC_COMMA, KC_DOT, SLSH_FUN,
                           ESC_LSFT,SPC_MOU, ENT_NAV,    DEL_NUM, BSCP_SYM, TAB_SHFT
