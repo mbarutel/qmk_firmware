@@ -29,6 +29,8 @@ enum custom_keycodes {
     OS_CUT,
     OS_UNDO,
     OS_SELALL,
+    OS_NEW_TAB,
+    OS_CLOSE_TAB,
 };
 
 // Tap Dance declarations
@@ -230,9 +232,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_MOU] = LAYOUT_split_3x5_3(
-       LCTL(KC_W), RGUI(KC_TAB), RGUI(KC_F),TD(TD_E_LEFT), TD(TD_I_RIGHT),              _______, _______, _______, _______, _______,
+       OS_CLOSE_TAB, LGUI(KC_TAB), LGUI(KC_F),TD(TD_E_LEFT), TD(TD_I_RIGHT),              _______, _______, _______, _______, _______,
        KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, LCTL(KC_B),                    _______, MS_LEFT, MS_DOWN, MS_UP,  MS_RGHT,
-       RALT(KC_D),_______,_______,_______,_______,                      _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
+       _______,_______,_______,_______,_______,                      _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
                                   _______, _______, _______,    MS_BTN1, MS_BTN2, MS_BTN3
     ),
 
@@ -258,7 +260,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_NAV] = LAYOUT_split_3x5_3(
-       RGUI(KC_Q), _______, LCTL(KC_T), C(S(KC_TAB)),LCTL(KC_TAB),       KC_PSCR, _______, _______, _______, _______,
+       LGUI(KC_Q), LGUI(KC_H), OS_NEW_TAB, C(S(KC_TAB)),LCTL(KC_TAB),       KC_PSCR, _______, _______, _______, _______,
        KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT,LCTL(KC_B),                    KC_CAPS, KC_LEFT, KC_DOWN, KC_UP,  KC_RIGHT,
        OS_UNDO, OS_CUT,  OS_COPY, OS_PASTE, OS_SELALL,                    _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END,
                                   _______, _______, _______,  RCTL(KC_DEL),RCTL(KC_BSPC), RSFT(KC_TAB)
@@ -312,6 +314,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 register_code(mod);
                 tap_code(KC_A);
+                unregister_code(mod);
+            }
+            return false;
+        case OS_NEW_TAB:
+            if (record->event.pressed) {
+                register_code(mod);
+                tap_code(KC_T);
+                unregister_code(mod);
+            }
+            return false;
+        case OS_CLOSE_TAB:
+            if (record->event.pressed) {
+                register_code(mod);
+                tap_code(KC_W);
                 unregister_code(mod);
             }
             return false;
