@@ -4,14 +4,14 @@
 #include "quantum.h"
 #include "os_detection.h"
 
-#define ENT_MED  LT(_MED, KC_ENT)
-#define BSCP_NUM  LT(_NUM, KC_BSPC)
-#define TAB_SYM LT(_SYM, KC_TAB)
-#define DEL_FUN LT(_FUN, KC_DEL)
-#define ESC_MOU LT(_MOU, KC_ESC)
-#define SPC_NAV LT(_NAV, KC_SPC)
-#define Z_LSFT  MT(MOD_LSFT, KC_Z)
-#define SLSH_RSFT MT(MOD_RSFT, KC_SLSH)
+#define ENT_NAV  LT(_NAV, KC_ENT)
+#define BSCP_SYM LT(_SYM, KC_BSPC)
+#define TAB_SHFT MT(MOD_RSFT, KC_TAB)
+#define DEL_NUM  LT(_NUM, KC_DEL)
+#define ESC_LSFT MT(MOD_LSFT, KC_ESC)
+#define SPC_MOU  LT(_MOU, KC_SPC)
+#define Z_MED    LT(_MED, KC_Z)
+#define SLSH_FUN LT(_FUN, KC_SLSH)
 
 enum cheapino_layers {
     _BASE,
@@ -29,6 +29,8 @@ enum custom_keycodes {
     OS_CUT,
     OS_UNDO,
     OS_SELALL,
+    OS_NEW_TAB,
+    OS_CLOSE_TAB,
 };
 
 // Tap Dance declarations
@@ -36,6 +38,8 @@ enum {
     TD_E_LEFT,    // Tap: RGUI(KC_E), Hold: RGUI(KC_LEFT)
     TD_I_RIGHT,   // Tap: RGUI(KC_I), Hold: RGUI(KC_RIGHT)
     TD_SPC_NAV,   // Tap: KC_SPC, Hold: MO(_NAV), Double-tap: TG(_NUM)
+    TD_F_SCLN,    // Tap: KC_F,       Hold: KC_SCLN
+    TD_U_MINS,    // Tap: KC_U,       Hold: KC_MINS
 };
 
 // Tap Dance state
@@ -134,6 +138,50 @@ void td_i_right_reset(tap_dance_state_t *state, void *user_data) {
     td_i_right_state.state = 0;
 }
 
+// TD_F_SCLN tap dance functions
+static tap_state_t td_f_scln_state = {
+    .is_press_action = true,
+    .state = 0
+};
+
+void td_f_scln_finished(tap_dance_state_t *state, void *user_data) {
+    td_f_scln_state.state = dance_step(state);
+    switch (td_f_scln_state.state) {
+        case SINGLE_TAP:   register_code(KC_F);    break;
+        case SINGLE_HOLD:  register_code(KC_SCLN); break;
+    }
+}
+
+void td_f_scln_reset(tap_dance_state_t *state, void *user_data) {
+    switch (td_f_scln_state.state) {
+        case SINGLE_TAP:   unregister_code(KC_F);    break;
+        case SINGLE_HOLD:  unregister_code(KC_SCLN); break;
+    }
+    td_f_scln_state.state = 0;
+}
+
+// TD_U_MINS tap dance functions
+static tap_state_t td_u_mins_state = {
+    .is_press_action = true,
+    .state = 0
+};
+
+void td_u_mins_finished(tap_dance_state_t *state, void *user_data) {
+    td_u_mins_state.state = dance_step(state);
+    switch (td_u_mins_state.state) {
+        case SINGLE_TAP:   register_code(KC_U);    break;
+        case SINGLE_HOLD:  register_code(KC_MINS); break;
+    }
+}
+
+void td_u_mins_reset(tap_dance_state_t *state, void *user_data) {
+    switch (td_u_mins_state.state) {
+        case SINGLE_TAP:   unregister_code(KC_U);    break;
+        case SINGLE_HOLD:  unregister_code(KC_MINS); break;
+    }
+    td_u_mins_state.state = 0;
+}
+
 // Combo definitions
 enum combos {
     COMBO_VB_LGUI,
@@ -164,16 +212,16 @@ combo_t key_combos[] = {
 
 // Tap Dance definitions
 tap_dance_action_t tap_dance_actions[] = {
-    [TD_E_LEFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_e_left_finished, td_e_left_reset),
+    [TD_E_LEFT]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_e_left_finished,  td_e_left_reset),
     [TD_I_RIGHT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_i_right_finished, td_i_right_reset),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT_split_3x5_3(
-        KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                          KC_J,    KC_L,    KC_U,    KC_Y,   KC_QUOT,
+        KC_Q,    KC_W,    KC_F, KC_P,  KC_G,                          KC_J,    KC_L,  KC_U, KC_Y, KC_QUOT,
         KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                          KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
-        Z_LSFT,  KC_X,    KC_C,    KC_V,    KC_B,                          KC_K,    KC_M,  KC_COMMA, KC_DOT, SLSH_RSFT,
-                          ESC_MOU, SPC_NAV, ENT_MED,    DEL_FUN, BSCP_NUM, TAB_SYM
+        Z_MED,   KC_X,    KC_C,    KC_V,    KC_B,                          KC_K,    KC_M,  KC_COMMA, KC_DOT, SLSH_FUN,
+                          ESC_LSFT,SPC_MOU, ENT_NAV,    DEL_NUM, BSCP_SYM, TAB_SHFT
     ),
 
     [_SYM] = LAYOUT_split_3x5_3(
@@ -184,23 +232,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_MOU] = LAYOUT_split_3x5_3(
-       RGUI(KC_Q), RGUI(KC_TAB), RGUI(KC_F),TD(TD_E_LEFT), TD(TD_I_RIGHT),              _______, _______, _______, _______, _______,
+       OS_CLOSE_TAB, LGUI(KC_TAB), LGUI(KC_F),TD(TD_E_LEFT), TD(TD_I_RIGHT),              _______, _______, _______, _______, _______,
        KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, LCTL(KC_B),                    _______, MS_LEFT, MS_DOWN, MS_UP,  MS_RGHT,
-       RALT(KC_D),_______,_______,_______,_______,                      _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
+       _______,_______,_______,_______,_______,                      _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
                                   _______, _______, _______,    MS_BTN1, MS_BTN2, MS_BTN3
     ),
 
     [_FUN] = LAYOUT_split_3x5_3(
        KC_F12,  KC_F7,   KC_F8,   KC_F9,   QK_BOOT,                      _______, _______, _______, _______, _______,
-       KC_F11,  KC_F4,   KC_F5,   KC_F6,   _______,                      RCTL(KC_B),KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI,
+       KC_F11,  KC_F4,   KC_F5,   KC_F6,   _______,                      KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI, _______,
        KC_F10,  KC_F1,   KC_F2,   KC_F3,   _______,                      _______, _______, _______, _______, _______,
                                   _______, _______, _______,    _______, _______, _______
     ),
 
     [_MED] = LAYOUT_split_3x5_3(
-       LSFT(KC_F5), KC_F5,  KC_F9, KC_F10, KC_F11,                     SGUI(KC_ENT),SGUI(KC_B),SGUI(KC_R),SGUI(KC_Z),SGUI(KC_X),
-       LCTL(KC_F7), LCTL(KC_F), LCTL(KC_S), KC_F12, LCTL(KC_F12),                    _______, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
-       LCTL(KC_GRV), _______,  _______, _______, LCTL(KC_SLASH),                 _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
+       _______, _______,  _______, _______, _______,                     SGUI(KC_ENT),SGUI(KC_B),SGUI(KC_R),SGUI(KC_Z),SGUI(KC_X),
+       _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT,                    _______, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
+       _______, _______,  _______, _______, _______,                 _______, _______,  _______, _______, _______,
                                   _______, _______, _______,    KC_MSTP, KC_MPLY, KC_MUTE
     ),
 
@@ -212,7 +260,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_NAV] = LAYOUT_split_3x5_3(
-       LCTL(KC_W), _______, LCTL(KC_T), C(S(KC_TAB)),LCTL(KC_TAB),       KC_PSCR, _______, _______, _______, _______,
+       LGUI(KC_Q), LGUI(KC_H), OS_NEW_TAB, C(S(KC_TAB)),LCTL(KC_TAB),       KC_PSCR, _______, _______, _______, _______,
        KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT,LCTL(KC_B),                    KC_CAPS, KC_LEFT, KC_DOWN, KC_UP,  KC_RIGHT,
        OS_UNDO, OS_CUT,  OS_COPY, OS_PASTE, OS_SELALL,                    _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END,
                                   _______, _______, _______,  RCTL(KC_DEL),RCTL(KC_BSPC), RSFT(KC_TAB)
@@ -269,29 +317,48 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 unregister_code(mod);
             }
             return false;
+        case OS_NEW_TAB:
+            if (record->event.pressed) {
+                register_code(mod);
+                tap_code(KC_T);
+                unregister_code(mod);
+            }
+            return false;
+        case OS_CLOSE_TAB:
+            if (record->event.pressed) {
+                register_code(mod);
+                tap_code(KC_W);
+                unregister_code(mod);
+            }
+            return false;
     }
     return true;
 }
 
-// uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-//     switch (keycode) {
-//         case SPC_NAV:
-//             return 200;
-//         default:
-//             return TAPPING_TERM;
-//     }
-// }
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case Z_MED:
+        case SLSH_FUN:
+        case SPC_MOU:
+            return 200;
+        case TD(TD_E_LEFT):
+        case TD(TD_I_RIGHT):
+            return 160;
+        default:
+            return TAPPING_TERM;
+    }
+}
 
-// bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
-//     switch (keycode) {
-//         case SPC_NAV:
-//         case Z_LSFT:
-//         case SLSH_RSFT:
-//             return false;
-//         default:
-//             return true;
-//     }
-// }
+bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case Z_MED:
+        case SLSH_FUN:
+        case SPC_MOU:
+            return false;
+        default:
+            return true;
+    }
+}
 
 // uint16_t get_autoshift_timeout(uint16_t keycode, keyrecord_t *record) {
 //   switch(keycode) {
