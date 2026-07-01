@@ -23,23 +23,10 @@ enum cheapino_layers {
     _NAV,
 };
 
-enum custom_keycodes {
-    OS_COPY = SAFE_RANGE,
-    OS_PASTE,
-    OS_CUT,
-    OS_UNDO,
-    OS_SELALL,
-    OS_NEW_TAB,
-    OS_CLOSE_TAB,
-};
-
 // Tap Dance declarations
 enum {
     TD_E_LEFT,    // Tap: RGUI(KC_E), Hold: RGUI(KC_LEFT)
     TD_I_RIGHT,   // Tap: RGUI(KC_I), Hold: RGUI(KC_RIGHT)
-    TD_SPC_NAV,   // Tap: KC_SPC, Hold: MO(_NAV), Double-tap: TG(_NUM)
-    TD_F_SCLN,    // Tap: KC_F,       Hold: KC_SCLN
-    TD_U_MINS,    // Tap: KC_U,       Hold: KC_MINS
 };
 
 // Tap Dance state
@@ -138,50 +125,6 @@ void td_i_right_reset(tap_dance_state_t *state, void *user_data) {
     td_i_right_state.state = 0;
 }
 
-// TD_F_SCLN tap dance functions
-static tap_state_t td_f_scln_state = {
-    .is_press_action = true,
-    .state = 0
-};
-
-void td_f_scln_finished(tap_dance_state_t *state, void *user_data) {
-    td_f_scln_state.state = dance_step(state);
-    switch (td_f_scln_state.state) {
-        case SINGLE_TAP:   register_code(KC_F);    break;
-        case SINGLE_HOLD:  register_code(KC_SCLN); break;
-    }
-}
-
-void td_f_scln_reset(tap_dance_state_t *state, void *user_data) {
-    switch (td_f_scln_state.state) {
-        case SINGLE_TAP:   unregister_code(KC_F);    break;
-        case SINGLE_HOLD:  unregister_code(KC_SCLN); break;
-    }
-    td_f_scln_state.state = 0;
-}
-
-// TD_U_MINS tap dance functions
-static tap_state_t td_u_mins_state = {
-    .is_press_action = true,
-    .state = 0
-};
-
-void td_u_mins_finished(tap_dance_state_t *state, void *user_data) {
-    td_u_mins_state.state = dance_step(state);
-    switch (td_u_mins_state.state) {
-        case SINGLE_TAP:   register_code(KC_U);    break;
-        case SINGLE_HOLD:  register_code(KC_MINS); break;
-    }
-}
-
-void td_u_mins_reset(tap_dance_state_t *state, void *user_data) {
-    switch (td_u_mins_state.state) {
-        case SINGLE_TAP:   unregister_code(KC_U);    break;
-        case SINGLE_HOLD:  unregister_code(KC_MINS); break;
-    }
-    td_u_mins_state.state = 0;
-}
-
 // Combo definitions
 enum combos {
     COMBO_VB_LGUI,
@@ -266,74 +209,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                   _______, _______, _______,  RALT(KC_DEL),RALT(KC_BSPC), RSFT(KC_TAB)
     ),
 };
-
-// Helper to get the correct modifier for the detected OS
-static uint16_t get_os_mod(void) {
-    switch (detected_host_os()) {
-        case OS_MACOS:
-        case OS_IOS:
-            return KC_LGUI;
-        default:  // Windows, Linux, etc.
-            return KC_LCTL;
-    }
-}
-
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    uint16_t mod = get_os_mod();
-
-    switch (keycode) {
-        case OS_COPY:
-            if (record->event.pressed) {
-                register_code(mod);
-                tap_code(KC_C);
-                unregister_code(mod);
-            }
-            return false;
-        case OS_PASTE:
-            if (record->event.pressed) {
-                register_code(mod);
-                tap_code(KC_V);
-                unregister_code(mod);
-            }
-            return false;
-        case OS_CUT:
-            if (record->event.pressed) {
-                register_code(mod);
-                tap_code(KC_X);
-                unregister_code(mod);
-            }
-            return false;
-        case OS_UNDO:
-            if (record->event.pressed) {
-                register_code(mod);
-                tap_code(KC_Z);
-                unregister_code(mod);
-            }
-            return false;
-        case OS_SELALL:
-            if (record->event.pressed) {
-                register_code(mod);
-                tap_code(KC_A);
-                unregister_code(mod);
-            }
-            return false;
-        case OS_NEW_TAB:
-            if (record->event.pressed) {
-                register_code(mod);
-                tap_code(KC_T);
-                unregister_code(mod);
-            }
-            return false;
-        case OS_CLOSE_TAB:
-            if (record->event.pressed) {
-                register_code(mod);
-                tap_code(KC_W);
-                unregister_code(mod);
-            }
-            return false;
-    }
-    return true;
-}
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
