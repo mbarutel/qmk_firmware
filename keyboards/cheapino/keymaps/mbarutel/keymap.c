@@ -13,6 +13,9 @@
 #define Z_MED    LT(_MED, KC_Z)
 #define SLSH_FUN LT(_FUN, KC_SLSH)
 
+// Bottom Row Mods
+#define QUOT_LGUI MT(MOD_RGUI, KC_QUOT)
+
 enum cheapino_layers {
     _BASE,
     _SYM,
@@ -128,7 +131,7 @@ void td_i_right_reset(tap_dance_state_t *state, void *user_data) {
 // Combo definitions
 enum combos {
     COMBO_VB_LGUI,
-    COMBO_KM_RGUI,
+    COMBO_KM_LGUI,
     COMBO_XC_LALT,
     COMBO_COMMDOT_RALT,
     COMBO_CV_LCTL,
@@ -146,7 +149,7 @@ const uint16_t PROGMEM commm_combo[]    = {KC_COMM, KC_M,     COMBO_END};
 
 combo_t key_combos[] = {
     [COMBO_VB_LGUI]     = COMBO(vb_combo,       KC_LGUI),
-    [COMBO_KM_RGUI]     = COMBO(km_combo,        KC_RGUI),
+    [COMBO_KM_LGUI]     = COMBO(km_combo,        KC_LGUI),
     [COMBO_XC_LALT]     = COMBO(xc_combo,        KC_LALT),
     [COMBO_COMMDOT_RALT]= COMBO(commdot_combo,   KC_RALT),
     [COMBO_CV_LCTL]     = COMBO(cv_combo,        KC_LCTL),
@@ -161,7 +164,7 @@ tap_dance_action_t tap_dance_actions[] = {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT_split_3x5_3(
-        KC_Q,    KC_W,    KC_F, KC_P,  KC_G,                          KC_J,    KC_L,  KC_U, KC_Y, KC_QUOT,
+        KC_Q,    KC_W,    KC_F, KC_P,  KC_G,                          KC_J,    KC_L,  KC_U, KC_Y, QUOT_LGUI,
         KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                          KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
         Z_MED,   KC_X,    KC_C,    KC_V,    KC_B,                          KC_K,    KC_M,  KC_COMMA, KC_DOT, SLSH_FUN,
                           ESC_LSFT,SPC_MOU, ENT_NAV,    DEL_NUM, BSCP_SYM, TAB_SHFT
@@ -229,6 +232,7 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
         case Z_MED:
         case SLSH_FUN:
         case SPC_MOU:
+        case QUOT_LGUI:
             return false;
         default:
             return true;
