@@ -2,19 +2,26 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include QMK_KEYBOARD_H
 #include "quantum.h"
-#include "os_detection.h"
 
-#define ENT_NAV  LT(_NAV, KC_ENT)
-#define BSCP_SYM LT(_SYM, KC_BSPC)
-#define TAB_SHFT MT(MOD_RSFT, KC_TAB)
-#define DEL_NUM  LT(_NUM, KC_DEL)
 #define ESC_LSFT MT(MOD_LSFT, KC_ESC)
 #define SPC_MOU  LT(_MOU, KC_SPC)
-#define Z_MED    LT(_MED, KC_Z)
-#define SLSH_FUN LT(_FUN, KC_SLSH)
+#define ENT_NAV  LT(_NAV, KC_ENT)
+
+#define DEL_NUM  LT(_NUM, KC_DEL)
+#define BSCP_SYM LT(_SYM, KC_BSPC)
+#define TAB_SHFT MT(MOD_RSFT, KC_TAB)
+
 
 // Bottom Row Mods
-#define QUOT_LGUI MT(MOD_RGUI, KC_QUOT)
+#define Z_MED LT(_MED, KC_A)
+#define X_GUI MT(MOD_LGUI, KC_X)
+#define C_ALT MT(MOD_LALT, KC_C)
+#define V_CTL MT(MOD_LCTL, KC_V)
+
+#define M_CTL     MT(MOD_RCTL, KC_M)
+#define COMMA_ALT MT(MOD_RALT, KC_COMMA)
+#define DOT_GUI   MT(MOD_RGUI, KC_DOT)
+#define SLSH_FUN  LT(_FUN, KC_O)
 
 enum cheapino_layers {
     _BASE,
@@ -26,147 +33,11 @@ enum cheapino_layers {
     _NAV,
 };
 
-// Tap Dance declarations
-enum {
-    TD_E_LEFT,    // Tap: RGUI(KC_E), Hold: RGUI(KC_LEFT)
-    TD_I_RIGHT,   // Tap: RGUI(KC_I), Hold: RGUI(KC_RIGHT)
-};
-
-// Tap Dance state
-typedef struct {
-    bool is_press_action;
-    uint8_t state;
-} tap_state_t;
-
-enum {
-    SINGLE_TAP = 1,
-    SINGLE_HOLD,
-    DOUBLE_TAP,
-    DOUBLE_HOLD,
-    DOUBLE_SINGLE_TAP,
-    MORE_TAPS
-};
-
-// Function to determine the current tap dance state
-static uint8_t dance_step(tap_dance_state_t *state) {
-    if (state->count == 1) {
-        if (state->interrupted || !state->pressed) return SINGLE_TAP;
-        else return SINGLE_HOLD;
-    } else if (state->count == 2) {
-        if (state->interrupted) return DOUBLE_SINGLE_TAP;
-        else if (state->pressed) return DOUBLE_HOLD;
-        else return DOUBLE_TAP;
-    }
-    return MORE_TAPS;
-}
-
-// TD_E_LEFT tap dance functions
-static tap_state_t td_e_left_state = {
-    .is_press_action = true,
-    .state = 0
-};
-
-void td_e_left_finished(tap_dance_state_t *state, void *user_data) {
-    td_e_left_state.state = dance_step(state);
-    switch (td_e_left_state.state) {
-        case SINGLE_TAP:
-            register_code(KC_RGUI);
-            register_code(KC_E);
-            break;
-        case SINGLE_HOLD:
-            register_code(KC_RGUI);
-            register_code(KC_LEFT);
-            break;
-    }
-}
-
-void td_e_left_reset(tap_dance_state_t *state, void *user_data) {
-    switch (td_e_left_state.state) {
-        case SINGLE_TAP:
-            unregister_code(KC_E);
-            unregister_code(KC_RGUI);
-            break;
-        case SINGLE_HOLD:
-            unregister_code(KC_LEFT);
-            unregister_code(KC_RGUI);
-            break;
-    }
-    td_e_left_state.state = 0;
-}
-
-// TD_I_RIGHT tap dance functions
-static tap_state_t td_i_right_state = {
-    .is_press_action = true,
-    .state = 0
-};
-
-void td_i_right_finished(tap_dance_state_t *state, void *user_data) {
-    td_i_right_state.state = dance_step(state);
-    switch (td_i_right_state.state) {
-        case SINGLE_TAP:
-            register_code(KC_RGUI);
-            register_code(KC_I);
-            break;
-        case SINGLE_HOLD:
-            register_code(KC_RGUI);
-            register_code(KC_RIGHT);
-            break;
-    }
-}
-
-void td_i_right_reset(tap_dance_state_t *state, void *user_data) {
-    switch (td_i_right_state.state) {
-        case SINGLE_TAP:
-            unregister_code(KC_I);
-            unregister_code(KC_RGUI);
-            break;
-        case SINGLE_HOLD:
-            unregister_code(KC_RIGHT);
-            unregister_code(KC_RGUI);
-            break;
-    }
-    td_i_right_state.state = 0;
-}
-
-// Combo definitions
-enum combos {
-    COMBO_VB_LGUI,
-    COMBO_KM_LGUI,
-    COMBO_XC_LALT,
-    COMBO_COMMDOT_RALT,
-    COMBO_CV_LCTL,
-    COMBO_COMMM_RCTL,
-    COMBO_LENGTH
-};
-uint16_t COMBO_LEN = COMBO_LENGTH;
-
-const uint16_t PROGMEM vb_combo[]       = {KC_V,    KC_B,     COMBO_END};
-const uint16_t PROGMEM km_combo[]       = {KC_K,    KC_M,     COMBO_END};
-const uint16_t PROGMEM xc_combo[]       = {KC_X,    KC_C,     COMBO_END};
-const uint16_t PROGMEM commdot_combo[]  = {KC_COMM, KC_DOT,   COMBO_END};
-const uint16_t PROGMEM cv_combo[]       = {KC_C,    KC_V,     COMBO_END};
-const uint16_t PROGMEM commm_combo[]    = {KC_COMM, KC_M,     COMBO_END};
-
-combo_t key_combos[] = {
-    [COMBO_VB_LGUI]     = COMBO(vb_combo,       KC_LGUI),
-    [COMBO_KM_LGUI]     = COMBO(km_combo,        KC_LGUI),
-    [COMBO_XC_LALT]     = COMBO(xc_combo,        KC_LALT),
-    [COMBO_COMMDOT_RALT]= COMBO(commdot_combo,   KC_RALT),
-    [COMBO_CV_LCTL]     = COMBO(cv_combo,        KC_LCTL),
-    [COMBO_COMMM_RCTL]  = COMBO(commm_combo,     KC_RCTL),
-};
-
-// Tap Dance definitions
-tap_dance_action_t tap_dance_actions[] = {
-    [TD_E_LEFT]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_e_left_finished,  td_e_left_reset),
-    [TD_I_RIGHT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_i_right_finished, td_i_right_reset),
-};
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT_split_3x5_3(
-        KC_Q,    KC_W,    KC_F, KC_P,  KC_G,                          KC_J,    KC_L,  KC_U, KC_Y, QUOT_LGUI,
-        KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                          KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
-        Z_MED,   KC_X,    KC_C,    KC_V,    KC_B,                          KC_K,    KC_M,  KC_COMMA, KC_DOT, SLSH_FUN,
+        KC_Q,    KC_W,    KC_F, KC_P,  KC_G,                          KC_J,    KC_L,  KC_U, KC_Y, KC_QUOT,
+        KC_A,   KC_R,    KC_S,    KC_T,    KC_D,                          KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
+        Z_MED,   X_GUI,   C_ALT,   V_CTL,    KC_B,                          KC_K,    M_CTL,  COMMA_ALT, DOT_GUI, SLSH_FUN,
                           ESC_LSFT,SPC_MOU, ENT_NAV,    DEL_NUM, BSCP_SYM, TAB_SHFT
     ),
 
@@ -178,7 +49,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_MOU] = LAYOUT_split_3x5_3(
-       _______, _______, _______,_______, _______,              _______, _______, _______, _______, _______,
+       LCTL(KC_H), LCTL(LSFT(KC_F)), LCTL(KC_F), LCTL(LALT(KC_LEFT)), LCTL(LALT(KC_RIGHT)),              _______, _______, _______, _______, _______,
        KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, LCTL(KC_B),                    _______, MS_LEFT, MS_DOWN, MS_UP,  MS_RGHT,
        _______,_______,_______,_______,_______,                      _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
                                   _______, _______, _______,    MS_BTN1, MS_BTN2, MS_BTN3
@@ -215,13 +86,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case Z_MED:
-        case SLSH_FUN:
         case SPC_MOU:
+        case Z_MED:
+        case X_GUI:
+        case C_ALT:
+        case V_CTL:
+        case M_CTL:
+        case COMMA_ALT:
+        case DOT_GUI:
+        case SLSH_FUN:
             return 200;
-        case TD(TD_E_LEFT):
-        case TD(TD_I_RIGHT):
-            return 160;
         default:
             return TAPPING_TERM;
     }
@@ -229,22 +103,17 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case Z_MED:
-        case SLSH_FUN:
         case SPC_MOU:
-        case QUOT_LGUI:
+        case Z_MED:
+        case X_GUI:
+        case C_ALT:
+        case V_CTL:
+        case M_CTL:
+        case COMMA_ALT:
+        case DOT_GUI:
+        case SLSH_FUN:
             return false;
         default:
             return true;
     }
 }
-
-// uint16_t get_autoshift_timeout(uint16_t keycode, keyrecord_t *record) {
-//   switch(keycode) {
-//     case KC_Q: case KC_A: case KC_Z:
-//     case KC_SCLN: case KC_O: case KC_SLSH:
-//       return 160;
-//   }
-
-//   return AUTO_SHIFT_TIMEOUT;
-// }

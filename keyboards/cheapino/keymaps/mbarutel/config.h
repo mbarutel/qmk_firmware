@@ -16,7 +16,7 @@
 
 
 // Optional: combo config
-#define COMBO_TERM 50
+// #define COMBO_TERM 50
 
 // Auto Shift
 // #define NO_AUTO_SHIFT_ALPHA
