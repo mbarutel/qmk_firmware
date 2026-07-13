@@ -82,8 +82,8 @@ void td_focus_left_finished(tap_dance_state_t *state, void *user_data) {
             register_code(KC_N);
             break;
         case SINGLE_HOLD:
-            register_code(KC_LALT);
-            register_code(KC_G);
+            register_code(KC_LCTL);
+            register_code(KC_LEFT);
             break;
     }
 }
@@ -95,8 +95,8 @@ void td_focus_left_reset(tap_dance_state_t *state, void *user_data) {
             unregister_code(KC_LALT);
             break;
         case SINGLE_HOLD:
-            unregister_code(KC_G);
-            unregister_code(KC_LALT);
+            unregister_code(KC_LEFT);
+            unregister_code(KC_LCTL);
             break;
     }
     td_focus_left_state.state = 0;
@@ -116,8 +116,8 @@ void td_focus_right_finished(tap_dance_state_t *state, void *user_data) {
             register_code(KC_O);
             break;
         case SINGLE_HOLD:
-            register_code(KC_LALT);
-            register_code(KC_SCLN);
+            register_code(KC_LCTL);
+            register_code(KC_RIGHT);
             break;
     }
 }
@@ -129,8 +129,8 @@ void td_focus_right_reset(tap_dance_state_t *state, void *user_data) {
             unregister_code(KC_LALT);
             break;
         case SINGLE_HOLD:
-            unregister_code(KC_SCLN);
-            unregister_code(KC_LALT);
+            unregister_code(KC_RIGHT);
+            unregister_code(KC_LCTL);
             break;
     }
     td_focus_right_state.state = 0;
