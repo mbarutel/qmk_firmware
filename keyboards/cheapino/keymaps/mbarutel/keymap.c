@@ -157,9 +157,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_MOU] = LAYOUT_split_3x5_3(
-       _______, _______, LALT(KC_F), TD(TD_FOCUS_LEFT), TD(TD_FOCUS_RIGHT),              _______, _______, _______, _______, _______,
+       _______, LSFT(LALT(KC_0)), LALT(KC_F), TD(TD_FOCUS_LEFT), TD(TD_FOCUS_RIGHT),              _______, _______, _______, _______, _______,
        KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, LCTL(KC_B),                    _______, MS_LEFT, MS_DOWN, MS_UP,  MS_RGHT,
-       _______,_______,_______,_______,_______,                      _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
+       LALT(KC_1),LALT(KC_2),LALT(KC_3),LALT(KC_4),LALT(KC_5),                      _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
                                   _______, _______, _______,    MS_BTN1, MS_BTN2, MS_BTN3
     ),
 
