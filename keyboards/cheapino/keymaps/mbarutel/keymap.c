@@ -172,8 +172,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_MED] = LAYOUT_split_3x5_3(
        _______, _______,  _______, _______, _______,                     SGUI(KC_ENT),SGUI(KC_B),SGUI(KC_R),SGUI(KC_Z),SGUI(KC_X),
-       _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT,                    _______, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
-       _______, _______,  _______, _______, _______,                 _______, _______,  _______, _______, _______,
+       LSFT(KC_F11), LCTL(KC_F11), KC_F7, _______, _______,                    _______, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
+       LSFT(KC_F5), LCTL(LSFT(KC_F5)),  KC_F5, _______, _______,                 _______, _______,  _______, _______, _______,
                                   _______, _______, _______,    KC_MSTP, KC_MPLY, KC_MUTE
     ),
 
