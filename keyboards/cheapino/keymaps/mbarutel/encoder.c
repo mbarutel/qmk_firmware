@@ -18,13 +18,13 @@ void clicked(void) {
 void turned(bool clockwise) {
     if (IS_LAYER_ON(2)) {
         // _MOU layer: mouse scroll
-        tap_code(clockwise ? KC_MS_WH_UP : KC_MS_WH_DOWN);
+        tap_code(clockwise ? KC_MS_WH_DOWN : KC_MS_WH_UP);
     } else if (IS_LAYER_ON(6)) {
         // _NAV layer: arrow keys
-        tap_code(clockwise ? KC_UP : KC_DOWN);
+        tap_code(clockwise ? KC_DOWN : KC_UP);
     } else {
         // Default: volume control
-        tap_code(clockwise ? KC_VOLU : KC_VOLD);
+        tap_code(clockwise ? KC_VOLD : KC_VOLU);
     }
 }
 

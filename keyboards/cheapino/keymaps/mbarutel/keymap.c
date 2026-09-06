@@ -79,10 +79,11 @@ void td_focus_left_finished(tap_dance_state_t *state, void *user_data) {
     switch (td_focus_left_state.state) {
         case SINGLE_TAP:
             register_code(KC_LALT);
-            register_code(KC_N);
+            register_code(KC_E);
             break;
         case SINGLE_HOLD:
             register_code(KC_LCTL);
+            register_code(KC_LALT);
             register_code(KC_LEFT);
             break;
     }
@@ -91,11 +92,12 @@ void td_focus_left_finished(tap_dance_state_t *state, void *user_data) {
 void td_focus_left_reset(tap_dance_state_t *state, void *user_data) {
     switch (td_focus_left_state.state) {
         case SINGLE_TAP:
-            unregister_code(KC_N);
+            unregister_code(KC_E);
             unregister_code(KC_LALT);
             break;
         case SINGLE_HOLD:
             unregister_code(KC_LEFT);
+            unregister_code(KC_LALT);
             unregister_code(KC_LCTL);
             break;
     }
@@ -113,10 +115,11 @@ void td_focus_right_finished(tap_dance_state_t *state, void *user_data) {
     switch (td_focus_right_state.state) {
         case SINGLE_TAP:
             register_code(KC_LALT);
-            register_code(KC_O);
+            register_code(KC_I);
             break;
         case SINGLE_HOLD:
             register_code(KC_LCTL);
+            register_code(KC_LALT);
             register_code(KC_RIGHT);
             break;
     }
@@ -125,11 +128,12 @@ void td_focus_right_finished(tap_dance_state_t *state, void *user_data) {
 void td_focus_right_reset(tap_dance_state_t *state, void *user_data) {
     switch (td_focus_right_state.state) {
         case SINGLE_TAP:
-            unregister_code(KC_O);
+            unregister_code(KC_I);
             unregister_code(KC_LALT);
             break;
         case SINGLE_HOLD:
             unregister_code(KC_RIGHT);
+            unregister_code(KC_LALT);
             unregister_code(KC_LCTL);
             break;
     }
@@ -156,18 +160,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                   KC_SCLN, _______, KC_MINUS,   _______, _______, _______
     ),
 
-    // [_MOU] = LAYOUT_split_3x5_3(
-    //    _______, LSFT(LALT(KC_0)), LALT(KC_F), TD(TD_FOCUS_LEFT), TD(TD_FOCUS_RIGHT),              _______, _______, _______, _______, _______,
-    //    LALT(KC_6),LALT(KC_7),LALT(KC_8),LALT(KC_9),LALT(KC_0),                    _______, MS_LEFT, MS_DOWN, MS_UP,  MS_RGHT,
-    //    LALT(KC_1),LALT(KC_2),LALT(KC_3),LALT(KC_4),LALT(KC_5),                      _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
-    //                               _______, _______, _______,    MS_BTN1, MS_BTN2, MS_BTN3
-    // ),
-
     [_MOU] = LAYOUT_split_3x5_3(
        TD(TD_FOCUS_LEFT),LALT(KC_7),LALT(KC_8),LALT(KC_9),TD(TD_FOCUS_RIGHT),              _______, _______, _______, _______, _______,
-       _______,LALT(KC_4),LALT(KC_5),LALT(KC_6),LALT(KC_F),                    _______, MS_LEFT, MS_DOWN, MS_UP,  MS_RGHT,
-       _______,LALT(KC_1),LALT(KC_2),LALT(KC_3),_______,                      _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
-                                  LALT(KC_0), _______, _______,    MS_BTN1, MS_BTN2, MS_BTN3
+       LALT(LCTL(KC_B)),LALT(KC_4),LALT(KC_5),LALT(KC_6),LALT(KC_F),                    _______, MS_LEFT, MS_DOWN, MS_UP,  MS_RGHT,
+       LALT(LCTL(KC_S)),LALT(KC_1),LALT(KC_2),LALT(KC_3),LALT(LCTL(KC_F)),                     _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
+                                  LALT(KC_0), _______, LALT(LSFT(KC_0)),    MS_BTN1, MS_BTN2, MS_BTN3
     ),
 
     [_FUN] = LAYOUT_split_3x5_3(
@@ -179,8 +176,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_MED] = LAYOUT_split_3x5_3(
        _______, _______,  _______, _______, _______,                     SGUI(KC_ENT),SGUI(KC_B),SGUI(KC_R),SGUI(KC_Z),SGUI(KC_X),
-       _______, _______,  _______, _______, _______,                    _______, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
-       _______, _______,  _______, _______, _______,                 _______, _______,  _______, _______, _______,
+       LSFT(KC_F11), LCTL(KC_F11),  KC_F7, _______, _______,                    _______, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
+       LSFT(KC_F5), LGUI(LSFT(KC_F5)),  KC_F5, _______, _______,                 _______, _______,  _______, _______, _______,
                                   _______, _______, _______,    KC_MSTP, KC_MPLY, KC_MUTE
     ),
 
