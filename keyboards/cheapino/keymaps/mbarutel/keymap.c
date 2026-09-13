@@ -37,6 +37,8 @@ enum cheapino_layers {
 enum {
     TD_FOCUS_LEFT,    // Tap: LALT(KC_N), Hold: LALT(KC_G)
     TD_FOCUS_RIGHT,   // Tap: LALT(KC_O), Hold: LALT(KC_SCLN)
+    TD_B_SCLN,        // Tap: KC_B, Hold: KC_SCLN
+    TD_K_MINS,        // Tap: KC_K, Hold: KC_MINS
 };
 
 // Tap Dance state
@@ -140,16 +142,60 @@ void td_focus_right_reset(tap_dance_state_t *state, void *user_data) {
     td_focus_right_state.state = 0;
 }
 
+// Generic tap/hold tap dance: tap sends `tap`, hold sends `hold`.
+// Multiple quick taps send `tap` once per tap so alphas still work when doubled (e.g. "bb").
+typedef struct {
+    uint16_t tap;
+    uint16_t hold;
+    uint8_t  state;
+} td_tap_hold_t;
+
+void td_tap_hold_finished(tap_dance_state_t *state, void *user_data) {
+    td_tap_hold_t *data = (td_tap_hold_t *)user_data;
+    data->state = dance_step(state);
+    switch (data->state) {
+        case SINGLE_TAP:
+            register_code16(data->tap);
+            break;
+        case SINGLE_HOLD:
+            register_code16(data->hold);
+            break;
+        default:
+            for (uint8_t i = 0; i < state->count; i++) {
+                tap_code16(data->tap);
+            }
+            break;
+    }
+}
+
+void td_tap_hold_reset(tap_dance_state_t *state, void *user_data) {
+    td_tap_hold_t *data = (td_tap_hold_t *)user_data;
+    switch (data->state) {
+        case SINGLE_TAP:
+            unregister_code16(data->tap);
+            break;
+        case SINGLE_HOLD:
+            unregister_code16(data->hold);
+            break;
+    }
+    data->state = 0;
+}
+
+#define ACTION_TAP_DANCE_TAP_HOLD(tap, hold) \
+    { .fn = {NULL, td_tap_hold_finished, td_tap_hold_reset}, .user_data = (void *)&((td_tap_hold_t){tap, hold, 0}), }
+
 tap_dance_action_t tap_dance_actions[] = {
     [TD_FOCUS_LEFT]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_focus_left_finished,  td_focus_left_reset),
     [TD_FOCUS_RIGHT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_focus_right_finished, td_focus_right_reset),
+    [TD_B_SCLN]      = ACTION_TAP_DANCE_TAP_HOLD(KC_B, KC_SCLN),
+    [TD_K_MINS]      = ACTION_TAP_DANCE_TAP_HOLD(KC_K, KC_MINS),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT_split_3x5_3(
         KC_Q,    KC_W,    KC_F, KC_P,  KC_G,                          KC_J,    KC_L,  KC_U, KC_Y, KC_QUOT,
         KC_A,   KC_R,    KC_S,    KC_T,    KC_D,                          KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
-        Z_GUI,   X_ALT,   C_CTL,   V_MED,    KC_B,                          KC_K,    M_FUN,  COMMA_CTL, DOT_ALT, SLSH_GUI,
+        Z_GUI,   X_ALT,   C_CTL,   V_MED,    TD(TD_B_SCLN),                 TD(TD_K_MINS), M_FUN,  COMMA_CTL, DOT_ALT, SLSH_GUI,
                           ESC_LSFT,SPC_MOU, ENT_NAV,    DEL_NUM, BSCP_SYM, TAB_SHFT
     ),
 
