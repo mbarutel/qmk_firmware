@@ -33,169 +33,49 @@ enum cheapino_layers {
     _NAV,
 };
 
-// Tap Dance declarations
-enum {
-    TD_FOCUS_LEFT,    // Tap: LALT(KC_N), Hold: LALT(KC_G)
-    TD_FOCUS_RIGHT,   // Tap: LALT(KC_O), Hold: LALT(KC_SCLN)
-    TD_B_SCLN,        // Tap: KC_B, Hold: KC_SCLN
-    TD_K_MINS,        // Tap: KC_K, Hold: KC_MINS
-};
+// Custom tap/hold keys.
+// Each key is LT(0, kc): layer 0 is _BASE so the hold does nothing on its own, and
+// process_record_user() below sends `tap` or `hold` based on record->tap.count.
+// These keys go through the normal tapping-term / hold-on-other-key-press logic,
+// so they can be tuned in get_tapping_term() like the mod-taps.
+// To add one: define a new LT(0, <unique basic keycode>) and add a row to tap_holds[].
+#define TH_B      LT(0, KC_B)   // tap B,       hold ;
+#define TH_K      LT(0, KC_K)   // tap K,       hold -
+#define TH_FOC_L  LT(0, KC_E)   // tap Alt+E,   hold Ctrl+Alt+Left
+#define TH_FOC_R  LT(0, KC_I)   // tap Alt+I,   hold Ctrl+Alt+Right
 
-// Tap Dance state
 typedef struct {
-    bool is_press_action;
-    uint8_t state;
-} tap_state_t;
-
-enum {
-    SINGLE_TAP = 1,
-    SINGLE_HOLD,
-    DOUBLE_TAP,
-    // DOUBLE_HOLD,
-    // DOUBLE_SINGLE_TAP,
-    // MORE_TAPS
-};
-
-// Function to determine the current tap dance state
-static uint8_t dance_step(tap_dance_state_t *state) {
-    if (state->count == 1) {
-        if (state->interrupted || !state->pressed) return SINGLE_TAP;
-        else return SINGLE_HOLD;
-    }
-    // } else if (state->count == 2) {
-        // if (state->interrupted) return DOUBLE_SINGLE_TAP;
-        // else if (state->pressed) return DOUBLE_HOLD;
-        // else return DOUBLE_TAP;
-    // }
-    return DOUBLE_TAP;
-}
-
-// TD_E_LEFT tap dance functions
-static tap_state_t td_focus_left_state = {
-    .is_press_action = true,
-    .state = 0
-};
-
-void td_focus_left_finished(tap_dance_state_t *state, void *user_data) {
-    td_focus_left_state.state = dance_step(state);
-    switch (td_focus_left_state.state) {
-        case SINGLE_TAP:
-            register_code(KC_LALT);
-            register_code(KC_E);
-            break;
-        case SINGLE_HOLD:
-            register_code(KC_LCTL);
-            register_code(KC_LALT);
-            register_code(KC_LEFT);
-            break;
-    }
-}
-
-void td_focus_left_reset(tap_dance_state_t *state, void *user_data) {
-    switch (td_focus_left_state.state) {
-        case SINGLE_TAP:
-            unregister_code(KC_E);
-            unregister_code(KC_LALT);
-            break;
-        case SINGLE_HOLD:
-            unregister_code(KC_LEFT);
-            unregister_code(KC_LALT);
-            unregister_code(KC_LCTL);
-            break;
-    }
-    td_focus_left_state.state = 0;
-}
-
-// TD_I_RIGHT tap dance functions
-static tap_state_t td_focus_right_state = {
-    .is_press_action = true,
-    .state = 0
-};
-
-void td_focus_right_finished(tap_dance_state_t *state, void *user_data) {
-    td_focus_right_state.state = dance_step(state);
-    switch (td_focus_right_state.state) {
-        case SINGLE_TAP:
-            register_code(KC_LALT);
-            register_code(KC_I);
-            break;
-        case SINGLE_HOLD:
-            register_code(KC_LCTL);
-            register_code(KC_LALT);
-            register_code(KC_RIGHT);
-            break;
-    }
-}
-
-void td_focus_right_reset(tap_dance_state_t *state, void *user_data) {
-    switch (td_focus_right_state.state) {
-        case SINGLE_TAP:
-            unregister_code(KC_I);
-            unregister_code(KC_LALT);
-            break;
-        case SINGLE_HOLD:
-            unregister_code(KC_RIGHT);
-            unregister_code(KC_LALT);
-            unregister_code(KC_LCTL);
-            break;
-    }
-    td_focus_right_state.state = 0;
-}
-
-// Generic tap/hold tap dance: tap sends `tap`, hold sends `hold`.
-// Multiple quick taps send `tap` once per tap so alphas still work when doubled (e.g. "bb").
-typedef struct {
+    uint16_t keycode;
     uint16_t tap;
     uint16_t hold;
-    uint8_t  state;
-} td_tap_hold_t;
+} tap_hold_t;
 
-void td_tap_hold_finished(tap_dance_state_t *state, void *user_data) {
-    td_tap_hold_t *data = (td_tap_hold_t *)user_data;
-    data->state = dance_step(state);
-    switch (data->state) {
-        case SINGLE_TAP:
-            register_code16(data->tap);
-            break;
-        case SINGLE_HOLD:
-            register_code16(data->hold);
-            break;
-        default:
-            for (uint8_t i = 0; i < state->count; i++) {
-                tap_code16(data->tap);
-            }
-            break;
-    }
-}
-
-void td_tap_hold_reset(tap_dance_state_t *state, void *user_data) {
-    td_tap_hold_t *data = (td_tap_hold_t *)user_data;
-    switch (data->state) {
-        case SINGLE_TAP:
-            unregister_code16(data->tap);
-            break;
-        case SINGLE_HOLD:
-            unregister_code16(data->hold);
-            break;
-    }
-    data->state = 0;
-}
-
-#define ACTION_TAP_DANCE_TAP_HOLD(tap, hold) \
-    { .fn = {NULL, td_tap_hold_finished, td_tap_hold_reset}, .user_data = (void *)&((td_tap_hold_t){tap, hold, 0}), }
-
-tap_dance_action_t tap_dance_actions[] = {
-    [TD_FOCUS_LEFT]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_focus_left_finished,  td_focus_left_reset),
-    [TD_FOCUS_RIGHT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_focus_right_finished, td_focus_right_reset),
-    [TD_B_SCLN]      = ACTION_TAP_DANCE_TAP_HOLD(KC_B, KC_SCLN),
-    [TD_K_MINS]      = ACTION_TAP_DANCE_TAP_HOLD(KC_K, KC_MINS),
+static const tap_hold_t tap_holds[] = {
+    { TH_B,     KC_B,       KC_SCLN       },
+    { TH_K,     KC_K,       KC_MINS       },
+    { TH_FOC_L, LALT(KC_E), LCA(KC_LEFT)  },
+    { TH_FOC_R, LALT(KC_I), LCA(KC_RIGHT) },
 };
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    for (uint8_t i = 0; i < ARRAY_SIZE(tap_holds); i++) {
+        if (tap_holds[i].keycode != keycode) continue;
+        uint16_t kc = record->tap.count ? tap_holds[i].tap : tap_holds[i].hold;
+        if (record->event.pressed) {
+            register_code16(kc);
+        } else {
+            unregister_code16(kc);
+        }
+        return false;
+    }
+    return true;
+}
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT_split_3x5_3(
         KC_Q,    KC_W,    KC_F, KC_P,  KC_G,                          KC_J,    KC_L,  KC_U, KC_Y, KC_QUOT,
         KC_A,   KC_R,    KC_S,    KC_T,    KC_D,                          KC_H,    KC_N,    KC_E,    KC_I,    KC_O,
-        Z_GUI,   X_ALT,   C_CTL,   V_MED,    TD(TD_B_SCLN),                 TD(TD_K_MINS), M_FUN,  COMMA_CTL, DOT_ALT, SLSH_GUI,
+        Z_GUI,   X_ALT,   C_CTL,   V_MED,    TH_B,                          TH_K,    M_FUN,  COMMA_CTL, DOT_ALT, SLSH_GUI,
                           ESC_LSFT,SPC_MOU, ENT_NAV,    DEL_NUM, BSCP_SYM, TAB_SHFT
     ),
 
@@ -207,7 +87,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_MOU] = LAYOUT_split_3x5_3(
-       TD(TD_FOCUS_LEFT),LALT(KC_7),LALT(KC_8),LALT(KC_9),TD(TD_FOCUS_RIGHT),              _______, _______, _______, _______, _______,
+       TH_FOC_L,LALT(KC_7),LALT(KC_8),LALT(KC_9),TH_FOC_R,                     _______, _______, _______, _______, _______,
        LALT(LCTL(KC_B)),LALT(KC_4),LALT(KC_5),LALT(KC_6),LALT(KC_F),                    _______, MS_LEFT, MS_DOWN, MS_UP,  MS_RGHT,
        LALT(LCTL(KC_S)),LALT(KC_1),LALT(KC_2),LALT(KC_3),LALT(LCTL(KC_F)),                     _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
                                   LALT(KC_0), _______, LALT(LSFT(KC_0)),    MS_BTN1, MS_BTN2, MS_BTN3
