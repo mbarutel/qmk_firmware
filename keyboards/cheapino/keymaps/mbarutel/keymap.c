@@ -135,6 +135,8 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
         case COMMA_CTL:
         case DOT_ALT:
         case SLSH_GUI:
+        case TH_B:
+        case TH_K:
             return 250;
         default:
             return TAPPING_TERM;
@@ -152,6 +154,8 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
         case COMMA_CTL:
         case DOT_ALT:
         case SLSH_GUI:
+        case TH_B:
+        case TH_K:
             return false;
         default:
             return true;
