@@ -33,113 +33,37 @@ enum cheapino_layers {
     _NAV,
 };
 
-// Tap Dance declarations
-enum {
-    TD_E_LEFT,    // Tap: RGUI(KC_E), Hold: RGUI(KC_LEFT)
-    TD_I_RIGHT,   // Tap: RGUI(KC_I), Hold: RGUI(KC_RIGHT)
-};
+// Custom tap/hold keys, resolved by QMK's normal tapping logic.
+// process_record_user() consumes both actions; no layer change occurs.
+#define TH_FOC_L LT(0, KC_E)
+#define TH_FOC_R LT(0, KC_I)
 
-// Tap Dance state
 typedef struct {
-    bool is_press_action;
-    uint8_t state;
-} tap_state_t;
+    uint16_t keycode;
+    uint16_t tap;
+    uint16_t hold;
+} tap_hold_t;
 
-enum {
-    SINGLE_TAP = 1,
-    SINGLE_HOLD,
-    DOUBLE_TAP,
-    DOUBLE_HOLD,
-    DOUBLE_SINGLE_TAP,
-    MORE_TAPS
+static const tap_hold_t tap_holds[] = {
+    { TH_FOC_L, RGUI(KC_E), RGUI(KC_LEFT)  },
+    { TH_FOC_R, RGUI(KC_I), RGUI(KC_RIGHT) },
 };
 
-// Function to determine the current tap dance state
-static uint8_t dance_step(tap_dance_state_t *state) {
-    if (state->count == 1) {
-        if (state->interrupted || !state->pressed) return SINGLE_TAP;
-        else return SINGLE_HOLD;
-    } else if (state->count == 2) {
-        if (state->interrupted) return DOUBLE_SINGLE_TAP;
-        else if (state->pressed) return DOUBLE_HOLD;
-        else return DOUBLE_TAP;
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    for (uint8_t i = 0; i < ARRAY_SIZE(tap_holds); i++) {
+        if (tap_holds[i].keycode != keycode) continue;
+
+        uint16_t kc = record->tap.count ? tap_holds[i].tap
+                                       : tap_holds[i].hold;
+        if (record->event.pressed) {
+            register_code16(kc);
+        } else {
+            unregister_code16(kc);
+        }
+        return false;
     }
-    return MORE_TAPS;
+    return true;
 }
-
-// TD_E_LEFT tap dance functions
-static tap_state_t td_e_left_state = {
-    .is_press_action = true,
-    .state = 0
-};
-
-void td_e_left_finished(tap_dance_state_t *state, void *user_data) {
-    td_e_left_state.state = dance_step(state);
-    switch (td_e_left_state.state) {
-        case SINGLE_TAP:
-            register_code(KC_RGUI);
-            register_code(KC_E);
-            break;
-        case SINGLE_HOLD:
-            register_code(KC_RGUI);
-            register_code(KC_LEFT);
-            break;
-    }
-}
-
-void td_e_left_reset(tap_dance_state_t *state, void *user_data) {
-    switch (td_e_left_state.state) {
-        case SINGLE_TAP:
-            unregister_code(KC_E);
-            unregister_code(KC_RGUI);
-            break;
-        case SINGLE_HOLD:
-            unregister_code(KC_LEFT);
-            unregister_code(KC_RGUI);
-            break;
-    }
-    td_e_left_state.state = 0;
-}
-
-// TD_I_RIGHT tap dance functions
-static tap_state_t td_i_right_state = {
-    .is_press_action = true,
-    .state = 0
-};
-
-void td_i_right_finished(tap_dance_state_t *state, void *user_data) {
-    td_i_right_state.state = dance_step(state);
-    switch (td_i_right_state.state) {
-        case SINGLE_TAP:
-            register_code(KC_RGUI);
-            register_code(KC_I);
-            break;
-        case SINGLE_HOLD:
-            register_code(KC_RGUI);
-            register_code(KC_RIGHT);
-            break;
-    }
-}
-
-void td_i_right_reset(tap_dance_state_t *state, void *user_data) {
-    switch (td_i_right_state.state) {
-        case SINGLE_TAP:
-            unregister_code(KC_I);
-            unregister_code(KC_RGUI);
-            break;
-        case SINGLE_HOLD:
-            unregister_code(KC_RIGHT);
-            unregister_code(KC_RGUI);
-            break;
-    }
-    td_i_right_state.state = 0;
-}
-
-// Tap Dance definitions
-tap_dance_action_t tap_dance_actions[] = {
-    [TD_E_LEFT]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_e_left_finished,  td_e_left_reset),
-    [TD_I_RIGHT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_i_right_finished, td_i_right_reset),
-};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT_split_3x5_3(
@@ -157,7 +81,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_MOU] = LAYOUT_split_3x5_3(
-       _______, LGUI(KC_TAB), LGUI(KC_F),TD(TD_E_LEFT), TD(TD_I_RIGHT),              _______, _______, _______, _______, _______,
+       _______, LGUI(KC_TAB), LGUI(KC_F),TH_FOC_L, TH_FOC_R,              _______, _______, _______, _______, _______,
        KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, LCTL(KC_B),                    _______, MS_LEFT, MS_DOWN, MS_UP,  MS_RGHT,
        _______,_______,_______,_______,_______,                      _______, MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR,
                                   _______, _______, _______,    MS_BTN1, MS_BTN2, MS_BTN3
@@ -196,8 +120,8 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case SPC_MOU:
             return 200;
-        case TD(TD_E_LEFT):
-        case TD(TD_I_RIGHT):
+        case TH_FOC_L:
+        case TH_FOC_R:
         case Z_GUI:
         case X_ALT:
         case C_CTL:
